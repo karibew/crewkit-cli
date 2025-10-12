@@ -1,0 +1,109 @@
+name: Feature Request
+description: Suggest a new feature or enhancement
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature! 💡
+
+        Help us understand your idea by filling out the sections below.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched existing issues to avoid duplicates
+          required: true
+        - label: This is not a bug report (use Bug Report template instead)
+          required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: What problem does this feature solve?
+      placeholder: |
+        I'm frustrated when...
+        It's difficult to...
+        I wish I could...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How would you like this to work?
+      placeholder: |
+        Add a command like `crewkit X` that does Y...
+        Modify the behavior of Z to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: What other solutions have you thought about?
+      placeholder: |
+        I considered doing X manually, but...
+        Alternative approach Y would also work...
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Usage Examples
+      description: Show how this feature would be used
+      placeholder: |
+        ```bash
+        # Example 1: Basic usage
+        crewkit new-feature --option value
+
+        # Example 2: Advanced usage
+        crewkit new-feature --advanced
+        ```
+      render: bash
+
+  - type: textarea
+    id: benefits
+    attributes:
+      label: Benefits
+      description: Who would benefit and how?
+      placeholder: |
+        - Developers working with multiple projects
+        - Teams that need to share configurations
+        - Anyone who wants to...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature to you?
+      options:
+        - "High - Would significantly improve my workflow"
+        - "Medium - Nice to have but not critical"
+        - "Low - Small quality of life improvement"
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other relevant information (mockups, references, etc.)
+      placeholder: Similar feature in tool X works like...
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: Would you be willing to help?
+      options:
+        - label: I'd be willing to test this feature
+        - label: I'd be willing to help document this feature
+        - label: I'd be willing to provide feedback during development

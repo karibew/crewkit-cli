@@ -1,0 +1,64 @@
+name: Question
+description: Ask a question about using crewkit
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have a question? We're here to help! 💬
+
+        **Note**: For general discussions, consider using [GitHub Discussions](https://github.com/karibew/crewkit-cli/discussions) instead.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have checked the FAQ and documentation
+          required: true
+        - label: I have searched existing issues and discussions
+          required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Question Category
+      options:
+        - Installation & Setup
+        - Authentication
+        - Configuration
+        - Agent Management
+        - Experiments & A/B Testing
+        - Troubleshooting
+        - Best Practices
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What would you like to know?
+      placeholder: How do I...? What is the best way to...? Can I...?
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Any relevant details about your setup or what you're trying to achieve
+      placeholder: |
+        I'm trying to set up agents for a Rails project...
+        My team wants to use role-based configs...
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: What Have You Tried?
+      description: What solutions have you already attempted?
+      placeholder: |
+        I tried doing X but got Y...
+        I looked at the docs but couldn't find...
