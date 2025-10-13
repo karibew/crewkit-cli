@@ -57,6 +57,25 @@ crewkit code         # Start Claude Code with synced agents
 crewkit code --no-watch  # Start without file watching
 ```
 
+## Configuration
+
+### API URL Override
+
+By default, the CLI connects to `https://api.na.crewkit.io`. You can override this by setting the `CREWKIT_API_URL` environment variable:
+
+```bash
+# Use a different region
+export CREWKIT_API_URL=https://api.eu.crewkit.io
+
+# Use a custom/self-hosted instance
+export CREWKIT_API_URL=https://crewkit.example.com
+
+# For local development
+export CREWKIT_API_URL=http://localhost:3050
+```
+
+The environment variable is respected by all commands, so you can set it once in your shell configuration.
+
 ## Documentation
 
 Visit [docs.crewkit.io](https://docs.crewkit.io) for full documentation.
