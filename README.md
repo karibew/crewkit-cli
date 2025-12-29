@@ -6,7 +6,7 @@ AI agent management for development teams
 [![Version](https://img.shields.io/npm/v/@crewkit/cli.svg)](https://www.npmjs.com/package/@crewkit/cli)
 [![Downloads/week](https://img.shields.io/npm/dw/@crewkit/cli.svg)](https://www.npmjs.com/package/@crewkit/cli)
 
-Crewkit is a CLI-first platform for managing AI agents like Claude Code with role-based configurations, team collaboration, and performance monitoring.
+crewkit is a CLI-first platform for managing AI agents like Claude Code with role-based configurations, team collaboration, and performance monitoring.
 
 ## Installation
 
@@ -53,20 +53,49 @@ crewkit init [org] [project]  # Initialize crewkit in your project
 ### Development
 
 ```bash
-crewkit code         # Start Claude Code with synced agents
-crewkit code --no-watch  # Start without file watching
+crewkit code                # Start Claude Code with synced agents
+crewkit code --no-watch     # Start without file watching
+crewkit code --no-auth      # Start without authentication (dev mode)
+```
+
+### Chat
+
+```bash
+crewkit chat                           # Start interactive chat
+crewkit chat "explain this code"       # Quick question with response
+crewkit chat -p "what is 2+2?"         # Print mode (non-interactive)
 ```
 
 ## Configuration
 
-### API URL Override
+### Shell Autocomplete
 
-By default, the CLI connects to `https://api.na.crewkit.io`. You can override this by setting the `CREWKIT_API_URL` environment variable:
+Enable shell autocomplete for faster command completion:
 
 ```bash
-# Use a different region
-export CREWKIT_API_URL=https://api.eu.crewkit.io
+# Setup autocomplete (one-time)
+crewkit autocomplete
 
+# Follow the instructions to add to your shell config
+# Supports: bash, zsh, fish
+```
+
+After setup, you can use TAB completion:
+
+```bash
+crewkit experiments show <TAB>        # List experiment slugs
+crewkit experiments create <TAB>      # List agent names
+crewkit experiments metrics <TAB>     # List experiment slugs
+crewkit experiments deploy <TAB>      # List experiment slugs
+```
+
+Autocomplete data is fetched from the API and cached locally for offline use.
+
+### API URL Override
+
+By default, the CLI connects to `https://api.crewkit.io`. You can override this by setting the `CREWKIT_API_URL` environment variable:
+
+```bash
 # Use a custom/self-hosted instance
 export CREWKIT_API_URL=https://crewkit.example.com
 
