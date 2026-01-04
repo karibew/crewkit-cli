@@ -1,118 +1,158 @@
 # crewkit
 
-AI agent management for development teams
+[![npm version](https://img.shields.io/npm/v/@crewkit/cli.svg)](https://www.npmjs.com/package/@crewkit/cli)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/karibew/crewkit-cli/ci.yml?branch=main)](https://github.com/karibew/crewkit-cli/actions)
 
-[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/@crewkit/cli.svg)](https://www.npmjs.com/package/@crewkit/cli)
-[![Downloads/week](https://img.shields.io/npm/dw/@crewkit/cli.svg)](https://www.npmjs.com/package/@crewkit/cli)
+**Your standards, every session.**
 
-crewkit is a CLI-first platform for managing AI agents like Claude Code with role-based configurations, team collaboration, and performance monitoring.
+Stop reviewing AI-generated inconsistency. crewkit syncs your team's Claude Code agent configurations, tracks what works, and lets you experiment with improvements.
 
-## Installation
+<!-- TODO: Add demo GIF -->
+
+## Install
 
 ```bash
 npm install -g @crewkit/cli
 ```
 
+## Why crewkit?
+
+- **Team consistency** - Everyone uses the same agent configs. No more "works on my machine" for AI prompts.
+- **Role-based modes** - Juniors get coaching mode (agents guide, don't code). Seniors get full autonomy. Same agents, different behaviors.
+- **A/B test your prompts** - Create experiments, measure outcomes, deploy winners. Data-driven agent improvement.
+- **Track what works** - See which configs lead to better code, fewer iterations, and faster completion.
+
 ## Quick Start
 
 ```bash
-# Initialize your project
-crewkit init
-
-# Authenticate with crewkit.io
+# 1. Connect your account
 crewkit auth login
 
-# Start Claude Code with synced agents
+# 2. Initialize your project
+crewkit init
+
+# 3. Start coding with your team's agents
 crewkit code
 ```
 
+That's it. Your team's agent configurations are now synced to `.claude/agents/` and ready to use.
+
 ## Features
 
-- **Role-based agent configurations** - Customize AI behavior by team member seniority
-- **Team collaboration** - Share agent configurations across your organization
-- **Version control** - Track and roll back agent modifications
-- **Performance monitoring** - Measure agent effectiveness and cost
+### Shared Agent Configurations
+
+Define agent configurations at the organization level, then customize per-project. Everyone on your team gets the same base agents with project-specific context.
+
+```bash
+crewkit resources list              # See available agents
+crewkit resources show rails-expert # View agent details
+```
+
+### Role-Based Agent Modes
+
+Different team members need different agent behaviors:
+
+| Role | Mode | Behavior |
+|------|------|----------|
+| Junior | Coaching | Agents guide and explain, don't write code directly |
+| Intermediate | Collaborative | Agents suggest and implement with explanation |
+| Senior | Autonomous | Agents execute with minimal hand-holding |
+
+Modes are applied automatically based on your team role.
+
+### A/B Testing for Prompts
+
+Test changes to your agent configurations with real usage data:
+
+```bash
+crewkit experiments create rails-expert     # Creates: swift-amber-falcon
+crewkit experiments metrics swift-amber-falcon
+crewkit experiments deploy swift-amber-falcon --variant variant
+```
+
+### Session Tracking
+
+Every coding session is tracked for analysis. See which agents perform best, identify patterns, and continuously improve.
 
 ## Commands
 
-### Authentication
+| Command | Description |
+|---------|-------------|
+| `crewkit` | Show setup status |
+| `crewkit code` | Start coding session with synced agents |
+| `crewkit auth login` | Connect your account |
+| `crewkit auth status` | Check authentication status |
+| `crewkit init` | Set up crewkit for current project |
+| `crewkit resources list` | List available agents |
+| `crewkit resources show <name>` | View agent configuration |
+| `crewkit experiments create <agent>` | Create A/B test experiment |
+| `crewkit experiments metrics <slug>` | View experiment results |
+| `crewkit org info` | Show organization details |
+| `crewkit project list` | List projects |
+| `crewkit members list` | List team members |
+
+Run `crewkit --help` for full command reference.
+
+## Headless Mode
+
+Run crewkit in scripts and CI pipelines:
 
 ```bash
-crewkit auth login   # Authenticate with crewkit.io
-crewkit auth status  # Check authentication status
-crewkit auth logout  # Clear credentials
+# Run with a prompt
+crewkit code -p "fix the failing tests"
+
+# JSON output for parsing
+crewkit code -p "add input validation" --output-format json
+
+# Quiet mode with timeout
+crewkit code -p "refactor auth module" -q --timeout 600
 ```
 
-### Project Setup
+## Session Resume
+
+Continue where you left off:
 
 ```bash
-crewkit init [org] [project]  # Initialize crewkit in your project
+crewkit code -c                    # Continue most recent session
+crewkit code -r                    # Pick a session to resume
+crewkit code -r abc123             # Resume specific session
+crewkit code -r abc123 --fork-session  # Fork into new session
 ```
 
-### Development
+## Platforms
 
-```bash
-crewkit code                # Start Claude Code with synced agents
-crewkit code --no-watch     # Start without file watching
-crewkit code --no-auth      # Start without authentication (dev mode)
-```
-
-### Chat
-
-```bash
-crewkit chat                           # Start interactive chat
-crewkit chat "explain this code"       # Quick question with response
-crewkit chat -p "what is 2+2?"         # Print mode (non-interactive)
-```
+| Platform | Architecture | Status |
+|----------|--------------|--------|
+| macOS | Apple Silicon (arm64) | Supported |
+| macOS | Intel (x64) | Supported |
+| Linux | x64 | Supported |
+| Linux | arm64 | Supported |
+| Windows | x64 | Supported |
 
 ## Configuration
 
-### Shell Autocomplete
-
-Enable shell autocomplete for faster command completion:
+crewkit auto-detects your project from git remotes. For manual configuration:
 
 ```bash
-# Setup autocomplete (one-time)
-crewkit autocomplete
-
-# Follow the instructions to add to your shell config
-# Supports: bash, zsh, fish
+crewkit init
 ```
 
-After setup, you can use TAB completion:
+This creates `.agent/config.yml` with your organization and project settings.
 
-```bash
-crewkit experiments show <TAB>        # List experiment slugs
-crewkit experiments create <TAB>      # List agent names
-crewkit experiments metrics <TAB>     # List experiment slugs
-crewkit experiments deploy <TAB>      # List experiment slugs
-```
+## Environment Variables
 
-Autocomplete data is fetched from the API and cached locally for offline use.
+| Variable | Description |
+|----------|-------------|
+| `CREWKIT_API_URL` | API endpoint (for self-hosted deployments) |
+| `NO_COLOR` | Disable colored output |
 
-### API URL Override
+## Links
 
-By default, the CLI connects to `https://api.crewkit.io`. You can override this by setting the `CREWKIT_API_URL` environment variable:
-
-```bash
-# Use a custom/self-hosted instance
-export CREWKIT_API_URL=https://crewkit.example.com
-
-# For local development
-export CREWKIT_API_URL=http://localhost:3050
-```
-
-The environment variable is respected by all commands, so you can set it once in your shell configuration.
-
-## Documentation
-
-Visit [docs.crewkit.io](https://docs.crewkit.io) for full documentation.
-
-## Support
-
-- GitHub Issues: [github.com/crewkit/crewkit/issues](https://github.com/crewkit/crewkit/issues)
-- Email: support@crewkit.io
+- [Website](https://crewkit.io)
+- [Documentation](https://docs.crewkit.io)
+- [npm Package](https://www.npmjs.com/package/@crewkit/cli)
+- [GitHub](https://github.com/crewkit/cli)
 
 ## License
 
