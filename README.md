@@ -66,9 +66,9 @@ Modes are applied automatically based on your team role.
 Test changes to your agent configurations with real usage data:
 
 ```bash
-crewkit experiments create rails-expert     # Creates: swift-amber-falcon
-crewkit experiments metrics swift-amber-falcon
-crewkit experiments deploy swift-amber-falcon --variant variant
+crewkit experiments create rails-expert       # Creates experiment with auto-generated slug
+crewkit experiments metrics swift-amber-falcon # View results
+crewkit experiments deploy swift-amber-falcon  # Deploy the winner
 ```
 
 ### Session Tracking
@@ -79,18 +79,23 @@ Every coding session is tracked for analysis. See which agents perform best, ide
 
 | Command | Description |
 |---------|-------------|
-| `crewkit` | Show setup status |
+| `crewkit` | Show status overview (auth, org, project, agents) |
 | `crewkit code` | Start coding session with synced agents |
 | `crewkit auth login` | Connect your account |
+| `crewkit auth logout` | Sign out |
 | `crewkit auth status` | Check authentication status |
 | `crewkit init` | Set up crewkit for current project |
 | `crewkit resources list` | List available agents |
 | `crewkit resources show <name>` | View agent configuration |
 | `crewkit experiments create <agent>` | Create A/B test experiment |
+| `crewkit experiments list` | List all experiments |
 | `crewkit experiments metrics <slug>` | View experiment results |
+| `crewkit experiments deploy <slug>` | Deploy experiment winner |
 | `crewkit org info` | Show organization details |
 | `crewkit project list` | List projects |
+| `crewkit project info` | Show current project details |
 | `crewkit members list` | List team members |
+| `crewkit whoami` | Show current user |
 
 Run `crewkit --help` for full command reference.
 
@@ -127,7 +132,6 @@ crewkit code -r abc123 --fork-session  # Fork into new session
 | macOS | Apple Silicon (arm64) | Supported |
 | macOS | Intel (x64) | Supported |
 | Linux | x64 | Supported |
-| Linux | arm64 | Supported |
 | Windows | x64 | Supported |
 
 ## Configuration
@@ -139,6 +143,15 @@ crewkit init
 ```
 
 This creates `.agent/config.yml` with your organization and project settings.
+
+## Global Flags
+
+| Flag | Description |
+|------|-------------|
+| `--no-color` | Disable colored output |
+| `--plain` | Use ASCII-only output (no Unicode) |
+| `-h, --help` | Show help for any command |
+| `-V, --version` | Show version |
 
 ## Environment Variables
 
@@ -152,7 +165,7 @@ This creates `.agent/config.yml` with your organization and project settings.
 - [Website](https://crewkit.io)
 - [Documentation](https://docs.crewkit.io)
 - [npm Package](https://www.npmjs.com/package/@crewkit/cli)
-- [GitHub](https://github.com/crewkit/cli)
+- [GitHub](https://github.com/karibew/crewkit-cli)
 
 ## License
 
