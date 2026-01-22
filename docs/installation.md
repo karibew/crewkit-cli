@@ -2,23 +2,54 @@
 
 ## Prerequisites
 
-- **Node.js**: Version 18.0.0 or higher
-- **npm**: Comes with Node.js
 - **Operating System**: macOS, Linux, or Windows
+- **Node.js** (optional): Version 18+ if using npm install method
 
-Check your Node.js version:
+---
+
+## Install via curl (Recommended)
+
+The fastest way to install crewkit:
+
 ```bash
-node --version
-# Should output v18.0.0 or higher
+curl -fsSL https://crewkit.io/install.sh | sh
 ```
+
+This will:
+- Detect your platform automatically
+- Download the appropriate binary
+- Verify the checksum
+- Install to `~/.crewkit/bin`
+
+### Install Options
+
+```bash
+# Install specific version
+curl -fsSL https://crewkit.io/install.sh | sh -s -- --version 0.2.0
+
+# Install to custom directory
+CREWKIT_INSTALL_DIR=/usr/local/bin curl -fsSL https://crewkit.io/install.sh | sh
+
+# Show help
+curl -fsSL https://crewkit.io/install.sh | sh -s -- --help
+```
+
+### Add to PATH
+
+After installation, add crewkit to your PATH:
+
+```bash
+# Add to ~/.bashrc, ~/.zshrc, or ~/.profile
+export PATH="$HOME/.crewkit/bin:$PATH"
+```
+
+Restart your terminal or run `source ~/.bashrc` (or `~/.zshrc`).
 
 ---
 
 ## Install via npm
 
-### Global Installation (Recommended)
-
-Install crewkit globally to use it from anywhere:
+If you have Node.js 18+, you can also install via npm:
 
 ```bash
 npm install -g @crewkit/cli
@@ -27,7 +58,6 @@ npm install -g @crewkit/cli
 Verify installation:
 ```bash
 crewkit --version
-# Should output: @crewkit/cli/0.1.x
 ```
 
 ### Local Installation
@@ -47,8 +77,24 @@ npx crewkit --version
 
 ## Update crewkit
 
-To update to the latest version:
+### Auto-update (built-in)
 
+crewkit automatically updates itself in the background. On every startup, it checks for updates (hourly cache) and downloads new versions automatically. The update takes effect on the next CLI invocation.
+
+```bash
+# Manual check/update (if needed)
+crewkit update --check
+crewkit update
+```
+
+### Manual update
+
+**If installed via curl:**
+```bash
+curl -fsSL https://crewkit.io/install.sh | sh
+```
+
+**If installed via npm:**
 ```bash
 npm update -g @crewkit/cli
 ```
