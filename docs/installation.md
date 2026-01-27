@@ -19,7 +19,7 @@ This will:
 - Detect your platform automatically
 - Download the appropriate binary
 - Verify the checksum
-- Install to `~/.crewkit/bin`
+- Install to `~/.local/bin`
 
 ### Install Options
 
