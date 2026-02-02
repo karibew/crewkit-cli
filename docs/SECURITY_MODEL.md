@@ -1,3 +1,15 @@
+---
+doc_tier: 3
+doc_type: pattern
+doc_status: active
+created: 2025-10-01
+last_reviewed: 2026-01-06
+owner: platform-team
+related_docs:
+  - CLAUDE.md
+tags: [security, architecture, multi-tenant, permissions]
+---
+
 # CrewKit Security Model
 
 > Comprehensive reference for multi-tenant security, permissions, and audit logging

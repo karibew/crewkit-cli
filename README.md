@@ -13,10 +13,12 @@ Stop reviewing AI-generated inconsistency. crewkit syncs your team's Claude Code
 ## Install
 
 ```bash
-# Install (recommended)
 curl -fsSL https://crewkit.io/install.sh | sh
+```
 
-# Or via npm
+Or via npm:
+
+```bash
 npm install -g @crewkit/cli
 ```
 
@@ -168,7 +170,7 @@ This creates `.agent/config.yml` with your organization and project settings.
 
 - [Website](https://crewkit.io)
 - [Documentation](https://docs.crewkit.io)
-- [npm Package](https://www.npmjs.com/package/@crewkit/cli)
+- [Install Script](https://crewkit.io/install.sh)
 - [GitHub](https://github.com/karibew/crewkit-cli)
 
 ## License

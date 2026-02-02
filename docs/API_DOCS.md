@@ -1,3 +1,15 @@
+---
+doc_tier: 2
+doc_type: spec
+doc_status: active
+created: 2025-10-01
+last_reviewed: 2026-01-06
+owner: platform-team
+related_docs:
+  - CLAUDE.md
+tags: [api, documentation, endpoints]
+---
+
 # Crewkit API Documentation
 
 Base URL: `https://api.crewkit.io/api/v1` (production) or `http://localhost:3000/api/v1` (development)

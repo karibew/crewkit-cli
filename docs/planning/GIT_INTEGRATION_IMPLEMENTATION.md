@@ -1,9 +1,17 @@
+---
+doc_tier: 1
+doc_type: plan
+doc_status: implemented
+created: 2025-11-01
+last_reviewed: 2026-01-06
+owner: platform-team
+tags: [git, integration, api]
+---
+
 # Git Integration Implementation Plan
 
 > **Phase**: 4 (from PLAN.md)
-> **Duration**: 4 weeks
-> **PRD**: `/Users/felixp/.claude/plans/lazy-hopping-meerkat.md`
-> **Status**: Ready for implementation
+> **Status**: Implemented
 
 ## Summary
 

@@ -1,3 +1,13 @@
+---
+doc_tier: 2
+doc_type: guide
+doc_status: active
+created: 2025-10-01
+last_reviewed: 2026-01-06
+owner: platform-team
+tags: [deployment, digitalocean, operations]
+---
+
 # Deployment Guide
 
 ## Environment Variables for DigitalOcean

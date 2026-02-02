@@ -1,3 +1,13 @@
+---
+doc_tier: 1
+doc_type: report
+doc_status: implemented
+created: 2025-11-01
+last_reviewed: 2026-01-06
+owner: platform-team
+tags: [dashboard, agents, ui]
+---
+
 # Agent Card Component Implementation
 
 ## Overview

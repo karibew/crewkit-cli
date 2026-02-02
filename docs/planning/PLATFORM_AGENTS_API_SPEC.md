@@ -1,3 +1,13 @@
+---
+doc_tier: 1
+doc_type: spec
+doc_status: active
+created: 2025-11-01
+last_reviewed: 2026-01-06
+owner: platform-team
+tags: [api, agents, specification]
+---
+
 # Platform Base Agents API Specification
 
 **Version**: v1
