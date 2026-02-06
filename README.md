@@ -13,13 +13,14 @@ Stop reviewing AI-generated inconsistency. crewkit syncs your team's Claude Code
 ## Install
 
 ```bash
-curl -fsSL https://crewkit.io/install.sh | sh
+brew install karibew/tap/crewkit
 ```
 
-Or via npm:
+Or via npm or curl:
 
 ```bash
 npm install -g @crewkit/cli
+curl -fsSL https://crewkit.io/install.sh | sh
 ```
 
 ## Why crewkit?
