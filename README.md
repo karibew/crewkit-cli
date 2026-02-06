@@ -173,6 +173,61 @@ This creates `.agent/config.yml` with your organization and project settings.
 - [Install Script](https://crewkit.io/install.sh)
 - [GitHub](https://github.com/karibew/crewkit-cli)
 
+## Development
+
+### Prerequisites
+
+| Tool | Version | Install |
+|------|---------|---------|
+| Rust | stable | `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \| sh` |
+| Ruby | 3.3+ | `mise install ruby` or `rbenv install 3.3.0` |
+| Node.js | 22+ | `mise install node` or `nvm install 22` |
+| PostgreSQL | 15+ | `brew install postgresql@17` |
+| [just](https://github.com/casey/just) | latest | `brew install just` |
+| [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | latest | `npm install -g @anthropic-ai/claude-code` |
+
+```bash
+# macOS — install everything via Homebrew
+brew install just rustup node@22 ruby
+
+# PostgreSQL via Docker (recommended) — uses docker-compose.yml in repo root
+docker compose up -d       # Postgres 17 on :5432 (password: root)
+
+# Or install natively
+brew install postgresql@15
+```
+
+### Getting Started
+
+```bash
+# Clone and set up
+git clone git@github.com:karibew/crewkit.git && cd crewkit
+
+# API
+cd api && bundle install && bin/rails db:setup && cd ..
+
+# Dashboard
+cd dashboard && npm install && cd ..
+
+# CLI
+cd cli && just build && just install-dev
+```
+
+### Running
+
+```bash
+cd api && bin/dev              # Rails API on :3050
+cd dashboard && npm run dev    # Next.js dashboard on :3051
+crewkit-dev code               # CLI against local API (auto-compiles)
+```
+
+`crewkit-dev` is an auto-compile dev runner that points to `localhost:3050` and builds from source on each invocation. Install it with `just install-dev` from the `cli/` directory. Use it from any project directory:
+
+```bash
+crewkit-dev code        # Start session against local API
+crewkit-dev auth status # Check auth against local API
+```
+
 ## License
 
 MIT
