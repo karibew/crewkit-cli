@@ -179,29 +179,24 @@ This creates `.agent/config.yml` with your organization and project settings.
 
 | Tool | Version | Install |
 |------|---------|---------|
-| Rust | stable | `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \| sh` |
-| Ruby | 3.3+ | `mise install ruby` or `rbenv install 3.3.0` |
-| Node.js | 22+ | `mise install node` or `nvm install 22` |
-| PostgreSQL | 15+ | `brew install postgresql@17` |
+| [mise](https://mise.jdx.dev) | latest | `brew install mise` |
 | [just](https://github.com/casey/just) | latest | `brew install just` |
 | [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | latest | `npm install -g @anthropic-ai/claude-code` |
 
 ```bash
-# macOS — install everything via Homebrew
-brew install just rustup node@22 ruby
+# macOS — install mise, just, and Docker
+brew install mise just
 
 # PostgreSQL via Docker (recommended) — uses docker-compose.yml in repo root
 docker compose up -d       # Postgres 17 on :5432 (password: root)
-
-# Or install natively
-brew install postgresql@15
 ```
 
 ### Getting Started
 
 ```bash
-# Clone and set up
+# Clone and install tool versions (Ruby, Node, Rust via .mise.toml)
 git clone git@github.com:karibew/crewkit.git && cd crewkit
+mise install
 
 # API
 cd api && bundle install && bin/rails db:setup && cd ..
