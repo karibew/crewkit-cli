@@ -16,10 +16,11 @@ Stop reviewing AI-generated inconsistency. crewkit syncs your team's Claude Code
 brew install karibew/tap/crewkit
 ```
 
-Or via npm or curl:
+Or via npm, Chocolatey (Windows), or curl:
 
 ```bash
 npm install -g @crewkit/cli
+choco install crewkit
 curl -fsSL https://crewkit.io/install.sh | sh
 ```
 
