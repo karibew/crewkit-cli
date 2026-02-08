@@ -1,7 +1,7 @@
 # crewkit
 
 [![npm version](https://img.shields.io/npm/v/@crewkit/cli.svg)](https://www.npmjs.com/package/@crewkit/cli)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 [![Build Status](https://img.shields.io/github/actions/workflow/status/karibew/crewkit-cli/ci.yml?branch=main)](https://github.com/karibew/crewkit-cli/actions)
 
 **Your standards, every session.**
@@ -227,4 +227,4 @@ crewkit-dev auth status # Check auth against local API
 
 ## License
 
-MIT
+See [Terms of Service](https://crewkit.io/terms) for license details.
