@@ -1,8 +1,8 @@
 # crewkit
 
 [![npm version](https://img.shields.io/npm/v/@crewkit/cli.svg)](https://www.npmjs.com/package/@crewkit/cli)
-
-[![Build Status](https://img.shields.io/github/actions/workflow/status/karibew/crewkit-cli/ci.yml?branch=main)](https://github.com/karibew/crewkit-cli/actions)
+[![GitHub release](https://img.shields.io/github/v/release/karibew/crewkit-cli)](https://github.com/karibew/crewkit-cli/releases/latest)
+[![Homebrew](https://img.shields.io/badge/homebrew-karibew%2Ftap-orange)](https://github.com/karibew/homebrew-tap)
 
 **Your standards, every session.**
 
