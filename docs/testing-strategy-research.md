@@ -1,8 +1,47 @@
 # Testing Strategy Research — AI-Agent-Driven Development on crewkit
 
-**Status:** Research draft, no code changes proposed for this pass.
-**Date:** 2026-05-06
+**Status:** Implemented through Month 1 as of 2026-05-20. See [Rollout status](#0-rollout-status) below.
+**Date drafted:** 2026-05-06
 **Scope:** Whole monorepo (api/, cli/, dashboard/, orchestrator/, integration-tests/).
+
+---
+
+## 0. Rollout status (2026-05-20)
+
+**Week 1 + Month 1 shipped.** Tracked by issue [#111](https://github.com/karibew/crewkit/issues/111). All 14 PRs merged.
+
+| Section | Deliverable | PR |
+|---|---|---|
+| §3.2 / §9 W1.1 | Block PRs on OpenAPI contract drift (STRICT=1 + remove continue-on-error) | [#114 ✅](https://github.com/karibew/crewkit/pull/114) merged |
+| §3.2 sidecar | Remove 14 stale OpenAPI spec entries (prerequisite for STRICT=1) | [#113 ✅](https://github.com/karibew/crewkit/pull/113) merged |
+| §4.1, §4.2, §4.4 / §9 W1.2 | `api/test/sentinels/` + first 3 sentinels (tenant, JWT scope, Stripe sig) | [#115 ✅](https://github.com/karibew/crewkit/pull/115) merged |
+| §7.1 / §9 W1.3 | `AGENTS.md` at repo root | [#116 ✅](https://github.com/karibew/crewkit/pull/116) merged |
+| §3.6 / §9 W1.4 | Document macOS pg parallel-test segfault | [#117 ✅](https://github.com/karibew/crewkit/pull/117) merged |
+| §5.3 / §9 W1.5 | Pin `cargo-nextest` | [#112 ✅](https://github.com/karibew/crewkit/pull/112) merged |
+| §11.4 / §9 W1.6 | `max_ci_rounds=2` on CloudJob (Stripe Minions pattern) | [#118 ✅](https://github.com/karibew/crewkit/pull/118) merged |
+| §4.3, §4.5, §4.6, §4.9, §4.10 / §9 M1.1 | Complete sentinel catalog (incl. TokenService.refill! idempotency fix) | [#122 ✅](https://github.com/karibew/crewkit/pull/122) merged |
+| §6.3, §7.2 / §9 M1.2 | `bin/test-affected` + PostToolUse hook | [#120 ✅](https://github.com/karibew/crewkit/pull/120) merged |
+| §4.7 / §9 M1.3 | CLI `sanitizer_sentinel.rs` proptest | [#121 ✅](https://github.com/karibew/crewkit/pull/121) merged |
+| §3.3 / §9 M1.4 | Pundit Scope audit (35 scopes, 0 gaps) | [#123 ✅](https://github.com/karibew/crewkit/pull/123) merged |
+| §7.3 / §9 M1.5 | `test-runner` subagent | [#119 ✅](https://github.com/karibew/crewkit/pull/119) merged |
+| §11.4 / §9 M1.6 | Reversion-rate widget (Shopify pattern) | [#125 ✅](https://github.com/karibew/crewkit/pull/125) merged |
+| §0 (this doc) | Research foundation committed | [#126 ✅](https://github.com/karibew/crewkit/pull/126) merged |
+| Sidecar | Phase B AgentIdentity (5 commits surfaced during Wave 0) | [#127 ✅](https://github.com/karibew/crewkit/pull/127) merged |
+
+**Real bugs found and fixed during the rollout (not in the original gap analysis):**
+
+1. **`TokenService.refill!` idempotency bug** (caught by #122's token-math sentinel). Pre-existing `rescue ActiveRecord::RecordNotUnique` was dead code — the AR validator fired first, raising `RecordInvalid` rewrapped as `TokenError`. Every duplicate Stripe webhook delivery would fail. Fixed via pre-existence check + scoped rescue.
+2. **5 paranoid models with un-scoped uniqueness validators** (caught by #122's paranoia sentinel): `SessionShare#share_token`, `Project#slug`, `Organization#slug`, `AgentExperiment#slug`, `AgentConfiguration#agent_name`. Pinned in `KNOWN_OFFENDERS`; new offenders blocked; existing ones tracked separately.
+3. **`BlueprintExecutionService` orphaned tasks** (caught by #118's QA review): the new `halted` cloud-job status wasn't handled, leaving linked blueprint tasks stuck in their prior state. Fixed.
+4. **Orchestrator `CloudJob` Rust struct silently dropped `max_ci_rounds`/`ci_rounds_used`** (caught by #118 QA): serde discarded the fields because they weren't declared. Added with `#[serde(default)]`.
+
+**Pre-existing flakes flagged but deferred** (failing on main since before this work):
+- Playwright E2E: postgres `role "root"` infra bug
+- integration tests: `chaos-resilience.test.ts > Empty fixture` failures
+
+**Quarter 1 items still deferred** per the original phased rollout — trigger classifiers over `SessionEvent`, shadow mode for ResourceVersion changes, `api/test/system/` deletion decision, inner-loop adherence metric.
+
+**Open Questions from §10** — 5 of 10 triaged in [#98](https://github.com/karibew/crewkit/issues/98) on 2026-05-15; Q3, Q7, Q8, Q10 still deferred.
 
 ---
 
