@@ -207,7 +207,7 @@ cd api && bundle install && bin/rails db:setup && cd ..
 cd dashboard && npm install && cd ..
 
 # CLI
-cd cli && just build && just install-dev
+cd cli && just setup && just build && just install-dev
 ```
 
 ### Running
