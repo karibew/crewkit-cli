@@ -19,11 +19,9 @@ SENTRY_TRACES_SAMPLE_RATE=0.1
 SENTRY_PROFILES_SAMPLE_RATE=0.1
 ```
 
-**CLI** (`cli/src/lib/sentry.ts`):
-```bash
-SENTRY_DSN=<cli-dsn>
-SENTRY_TRACES_SAMPLE_RATE=0.1
-```
+**CLI** (`cli/src/main.rs` — `init_sentry()`, via the `sentry` Rust crate):
+The CLI's DSN is compiled in; release tracking uses `sentry::release_name!()`.
+No env vars are required for the CLI.
 
 ## GitHub Actions Release Tracking
 
