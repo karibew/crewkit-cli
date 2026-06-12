@@ -108,9 +108,41 @@ Every coding session is tracked for analysis. See which agents perform best, ide
 | `crewkit update` | Update crewkit to the latest version |
 | `crewkit feedback <msg>` | Send feedback |
 | `crewkit lsp <subcommand>` | Code intelligence (LSP) for Claude Code |
+| `crewkit lsp doctor` | Diagnose the LSP setup (`--json` for scripting) |
 | `crewkit whoami` | Show current user |
 
 Run `crewkit --help` for full command reference.
+
+## Code Intelligence (LSP)
+
+`crewkit lsp install` registers a Claude Code plugin that runs the built-in
+crewkit language server (`crewkit lsp start --stdio`) for go-to-definition
+and symbol search across Rust, TypeScript/JavaScript, and Ruby. Symbols are
+indexed into `.claude/.crewkit-lsp/index.redb` per project.
+
+When code intelligence isn't working, run the diagnostic:
+
+```bash
+crewkit lsp doctor          # human-readable report
+crewkit lsp doctor --json   # machine-readable, for scripts/CI
+```
+
+It checks, with a pass/warn/fail marker and a fix-it hint per line:
+
+- Claude Code CLI availability
+- Plugin installation and enablement (user, project, and local scopes)
+- The plugin's pinned binary path (exists, executable, version matches the
+  running crewkit — stale after updates is the most common silent failure)
+- Conflicting LSP plugins (official rust-analyzer/typescript/ruby LSPs)
+- redb index health (exists, size, openable, file/symbol counts, leftover
+  per-process index files from dead sessions)
+- tree-sitter parser coverage for the languages detected in the repo
+- A stdio handshake smoke test (spawns the server, sends `initialize`,
+  expects a response, then shuts down cleanly)
+
+Exits non-zero if any check fails. The TUI sidebar's Session section also
+shows a one-line LSP status (`active · N files`, `plugin off`, or `failed`
+with a pointer to `crewkit lsp doctor`).
 
 ## Headless Mode
 
