@@ -75,3 +75,17 @@ See [PLAN.md](../PLAN.md) for the concrete phase breakdown (A through E). Phase 
 > **Note on #7**: a client-side LLM gateway proxy already ships in the CLI (`crewkit code --llm-gateway`, `cli/src/services/llm_gateway.rs`) — it proxies and file-logs locally, but its server-side ingestion endpoint was removed in 2026-01 (commit 18c6931). "Become an LLM gateway" means restoring/replacing that server-side capture path as the live alternative to JSONL session import.
 
 Anything outside this list that surfaces as "built-in" today was an implementation assumption, not a requirement.
+
+## Decisions added on 2026-06-12 (post-deep-assessment review)
+
+| # | Decision |
+|---|---|
+| 9 | Close the existing enforcement loop (Phase D1) before building new governance detectors (D2). |
+| 10 | crewkit MCP server is the next strategic build — context-pull parity and distribution. |
+| 11 | Full retrieval migration to pgvector (Voyage AI embeddings behind a swappable seam); DO Knowledge Base retired. |
+| 12 | Gateway becomes default-on only after bypass-on-death ships and headless capture bakes 2–3 weeks. |
+| 13 | The web app renames to **Bridge**, bundled with the conversations-first IA overhaul (code dir keeps `dashboard/`). |
+| 14 | Phase F (context/distribution/surface) runs before Phase E (Blueprint). |
+| 15 | Standing architecture principle: every external dependency behind a single swappable seam (self-host readiness). |
+
+Reference: [deep assessment 2026-06-11](./audits/deep-assessment-2026-06-11.md).
