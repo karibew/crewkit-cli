@@ -99,6 +99,10 @@ Every coding session is tracked for analysis. See which agents perform best, ide
 | `crewkit project list` | List projects |
 | `crewkit project info` | Show current project details |
 | `crewkit playbooks list` | View playbooks and conventions for your projects |
+| `crewkit sessions list` | List recent sessions (current project by default) |
+| `crewkit sessions show <id>` | Session detail: timing, cost, analysis, tasks, shares |
+| `crewkit sessions share <id>` | Create a share link (`--list` / `--revoke` to manage) |
+| `crewkit sessions report` | Team/project digest: sessions, cost, top agents, trends |
 | `crewkit sessions import` | Import historical sessions from JSONL |
 | `crewkit blueprint <subcommand>` | AI-powered project planning (create, list, show, tasks, ...) |
 | `crewkit update` | Update crewkit to the latest version |
