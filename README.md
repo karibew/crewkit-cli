@@ -116,12 +116,50 @@ Run crewkit in scripts and CI pipelines:
 # Run with a prompt
 crewkit code -p "fix the failing tests"
 
-# JSON output for parsing
+# JSON output for parsing (text | json | stream-json)
 crewkit code -p "add input validation" --output-format json
 
 # Quiet mode with timeout
 crewkit code -p "refactor auth module" -q --timeout 600
 ```
+
+Headless runs get the same observability as interactive sessions: a
+conversation is created with trigger `headless`, hook events stream to the
+platform, and the session is closed with a success/failure outcome when the
+run finishes (or `timeout` if the time limit is hit — exit code 4). Progress
+messages go to stderr so stdout stays parseable with `--output-format json`.
+
+Headless mode requires authentication and a detectable project — it exits
+with an error instead of degrading to an untracked run. If your organization
+has enabled LLM gateway telemetry, headless runs route Claude's Anthropic API
+traffic through the local gateway automatically (see below).
+
+## LLM Gateway
+
+`crewkit code --llm-gateway` starts a local proxy on 127.0.0.1 and points the
+spawned Claude Code process at it (`ANTHROPIC_BASE_URL` is set on the child
+process only). The gateway captures per-request telemetry — model, token
+usage (including cache tokens), duration, stop reason, status — and uploads
+it to the platform in batches.
+
+Enablement rules (all must hold):
+
+- The organization has LLM gateway telemetry enabled (org setting)
+- The session is not marked `--sensitive`
+- The gateway was requested: `--llm-gateway`, or implicitly by headless mode
+
+Privacy:
+
+- Request/response bodies are uploaded only when the organization's capture
+  mode is `full`, and are always secret-redacted first. Otherwise only
+  metadata is sent (null bodies).
+- Local logs in `~/.crewkit/logs/gateway-*.log` follow the same body rules,
+  are created owner-only (0600), and are pruned after 7 days.
+- Upload failures are logged and dropped (bounded in-memory queue, no
+  retries) so a flaky network never blocks your session.
+
+`--llm-gateway-port <PORT>` overrides the default ephemeral port. The gateway
+is skipped under Bedrock/Vertex routing and in no-auth/offline mode.
 
 ## Session Resume
 
