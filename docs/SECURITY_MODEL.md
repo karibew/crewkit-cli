@@ -29,13 +29,13 @@ CrewKit uses a multi-tenant architecture with two distinct role systems:
 ```
 crewkit_owner (0)     → Full system access, can impersonate
 ├─ crewkit_staff (1)  → View all orgs, support tasks (read-only by default)
-└─ org_user (4)       → Regular user (default), access via org memberships
+└─ org_user (2)       → Regular user (default), access via org memberships
 ```
 
 **Security Rules:**
 - Platform roles are immutable by org users
 - Only crewkit_owner can grant/revoke platform roles
-- crewkit staff cannot belong to organizations (enforced by validation)
+- Platform admins (crewkit_owner / crewkit_staff) can access any organization for support purposes; there is no validation prohibiting staff from belonging to organizations (every user gets a personal organization on creation)
 
 ### Organization Permissions (UserOrganizationRole.permission_level)
 

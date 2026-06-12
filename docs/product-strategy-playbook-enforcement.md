@@ -1,6 +1,15 @@
+---
+doc_status: superseded
+---
+
+> [!WARNING]
+> **SUPERSEDED — historical reference only.** This document predates the 2026-04 strategy pivot. It was written on 2026-01-15, before the direction recorded in [`product-direction.md`](./product-direction.md) (last updated 2026-04-21) was adopted. The current source of truth for product strategy is [`docs/product-direction.md`](./product-direction.md). The content below is retained for historical context and does NOT reflect the current product direction.
+>
+> Note: fragments of this plan shipped later (UserPromptSubmit context injection, write-only ConventionOverride logging via `POST /:org_id/observability/convention_overrides`); the Phase-1 measurement layer (adherence scoring, ConventionAlertMailer, analytics read path), `/playbook-override`, blocking mode, and per-org `enforcement_level` were never built.
+
 # Product Strategy: Playbook Convention Enforcement
 
-**Status**: Decision Framework
+**Status**: Superseded (predates the 2026-04 strategy pivot — see [`product-direction.md`](./product-direction.md))
 **Date**: 2026-01-15
 **Decision Owner**: Product Strategy
 

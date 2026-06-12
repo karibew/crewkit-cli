@@ -51,7 +51,7 @@ Agents stop being invoked — they start participating.
 
 ## Why now
 
-- Solo-founder / 2-person projects are the norm at Karibou today. Any team member going on vacation stalls the project. The institutional-memory layer unblocks this.
+- Solo-founder / 2-person projects are the norm at Karibew today. Any team member going on vacation stalls the project. The institutional-memory layer unblocks this.
 - Claude 5.8+ will close the technical-convention gap. That's not where the moat lives.
 - Vacation season (summer 2026) is the forcing function — projects should continue, not pause.
 
@@ -71,5 +71,7 @@ See [PLAN.md](../PLAN.md) for the concrete phase breakdown (A through E). Phase 
 | 6 | Ticket-based UX stays alongside Blueprint, not replaced. |
 | 7 | Session import survives and may become an LLM gateway. |
 | 8 | Session sharing stays; session vectorization + cross-user active-work are explicit scope. |
+
+> **Note on #7**: a client-side LLM gateway proxy already ships in the CLI (`crewkit code --llm-gateway`, `cli/src/services/llm_gateway.rs`) — it proxies and file-logs locally, but its server-side ingestion endpoint was removed in 2026-01 (commit 18c6931). "Become an LLM gateway" means restoring/replacing that server-side capture path as the live alternative to JSONL session import.
 
 Anything outside this list that surfaces as "built-in" today was an implementation assumption, not a requirement.

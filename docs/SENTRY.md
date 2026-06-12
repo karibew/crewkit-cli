@@ -28,7 +28,7 @@ No env vars are required for the CLI.
 1. Create Sentry auth token (Settings → Auth Tokens)
    - Scopes: `project:releases`, `org:read`
 2. Add to GitHub Secrets: `SENTRY_AUTH_TOKEN`
-3. Releases auto-created on `git push --tags`
+3. Releases auto-created by the `sentry` job in `.github/workflows/release-cli.yml` (via `getsentry/action-release@v1`, version `crewkit-cli-<version>`). That workflow runs through `workflow_call` from the Release Please flow (merging the release PR) or via `workflow_dispatch` — there is no tag-push trigger.
 
 ## Testing
 

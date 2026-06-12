@@ -71,12 +71,11 @@ Modes are applied automatically based on your team role.
 
 ### A/B Testing for Prompts
 
-Test changes to your agent configurations with real usage data:
+Test changes to your agent configurations with real usage data. Experiments are
+created and managed in the dashboard; the CLI can inspect them:
 
 ```bash
-crewkit experiments create rails-expert       # Creates experiment with auto-generated slug
-crewkit experiments metrics swift-amber-falcon # View results
-crewkit experiments deploy swift-amber-falcon  # Deploy the winner
+crewkit experiments show <slug>   # View an experiment's details
 ```
 
 ### Session Tracking
@@ -95,14 +94,16 @@ Every coding session is tracked for analysis. See which agents perform best, ide
 | `crewkit init` | Set up crewkit for current project |
 | `crewkit resources list` | List available agents |
 | `crewkit resources show <name>` | View agent configuration |
-| `crewkit experiments create <agent>` | Create A/B test experiment |
-| `crewkit experiments list` | List all experiments |
-| `crewkit experiments metrics <slug>` | View experiment results |
-| `crewkit experiments deploy <slug>` | Deploy experiment winner |
+| `crewkit experiments show <slug>` | View experiment details |
 | `crewkit org info` | Show organization details |
 | `crewkit project list` | List projects |
 | `crewkit project info` | Show current project details |
-| `crewkit members list` | List team members |
+| `crewkit playbooks list` | View playbooks and conventions for your projects |
+| `crewkit sessions import` | Import historical sessions from JSONL |
+| `crewkit blueprint <subcommand>` | AI-powered project planning (create, list, show, tasks, ...) |
+| `crewkit update` | Update crewkit to the latest version |
+| `crewkit feedback <msg>` | Send feedback |
+| `crewkit lsp <subcommand>` | Code intelligence (LSP) for Claude Code |
 | `crewkit whoami` | Show current user |
 
 Run `crewkit --help` for full command reference.
@@ -144,13 +145,14 @@ crewkit code -r abc123 --fork-session  # Fork into new session
 
 ## Configuration
 
-crewkit auto-detects your project from git remotes. For manual configuration:
+crewkit auto-detects your project from git remotes and registers it on first `crewkit code`. For manual configuration:
 
 ```bash
-crewkit init
+crewkit init               # Pin the org/project mapping locally
+crewkit init --workspace   # Create and register a multi-repo workspace project
 ```
 
-This creates `.agent/config.yml` with your organization and project settings.
+`crewkit init` writes a local `.agent/config.yml` with your organization and project settings — useful when git detection is ambiguous. It does not register the project with the API; registration happens via `crewkit code` (or `crewkit init --workspace` for workspaces).
 
 ## Global Flags
 
@@ -166,6 +168,10 @@ This creates `.agent/config.yml` with your organization and project settings.
 | Variable | Description |
 |----------|-------------|
 | `CREWKIT_API_URL` | API endpoint (for self-hosted deployments) |
+| `CREWKIT_TOKEN` | Access token for CI/scripts (takes precedence over stored login) |
+| `CREWKIT_WEB_URL` | Web/dashboard URL override (for self-hosted deployments) |
+| `CREWKIT_REPOSITORY_ID` | Explicit repository ID for `crewkit code` (skips detection/linking) |
+| `CREWKIT_ENV` | Environment tag for error reporting (default: production) |
 | `NO_COLOR` | Disable colored output |
 
 ## Links

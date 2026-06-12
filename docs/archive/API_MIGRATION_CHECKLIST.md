@@ -252,7 +252,6 @@ These controllers use manual JSON builders and need to be migrated to use serial
 - **Files**:
   - `api/app/controllers/api/v1/observability/ingest_controller.rb`
   - `api/app/controllers/api/v1/observability/sessions_controller.rb`
-  - `api/app/controllers/api/v1/observability/llm_gateway_controller.rb`
 - **Priority**: **LOW** (internal observability)
 - **Action**: **Review for consistency**
 

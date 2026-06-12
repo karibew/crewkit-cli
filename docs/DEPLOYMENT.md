@@ -12,16 +12,18 @@ tags: [deployment, digitalocean, operations]
 
 ## Environment Variables for DigitalOcean
 
+> **Secrets never live in this doc.** The placeholders below are intentional. Real `SECRET_KEY_BASE` and `DEVISE_JWT_SECRET_KEY` values come ONLY from the DigitalOcean console (App-Level Environment Variables) or Rails encrypted credentials, and must never be committed here or anywhere in the repository.
+
 ### Staging Environment
 
 Set these environment variables in your DigitalOcean App Platform staging environment:
 
 ```bash
 # Required - Rails secret key base
-SECRET_KEY_BASE=3c60a5b824fa545aceba7253d09fa69fef5d456df03c22d96ca9d251a17059cf6cc252b1e73cbc80e09c5fb23f5a3cad8feb8a44ee19ce5a7f002de8e313242c
+SECRET_KEY_BASE=<generate with: bin/rails secret — set in the DigitalOcean console, never commit>
 
 # Required - Devise JWT secret key
-DEVISE_JWT_SECRET_KEY=8868aacec68190a6f129effae102227e762f9dad720a1d7731d0e3111ac06b6fee040e2696f8c3dd2ce401f258b45643496df7fb0c336911dc83593d4539600f
+DEVISE_JWT_SECRET_KEY=<generate with: bin/rails secret — set in the DigitalOcean console, never commit>
 
 # Required - Rails environment
 RAILS_ENV=production
@@ -46,10 +48,10 @@ Set these environment variables in your DigitalOcean App Platform production env
 
 ```bash
 # Required - Rails secret key base
-SECRET_KEY_BASE=3690bff334023a8e235a0b88d64a15cd88b3ad34c3a3829b16ba0417dc6e3c6b8a9b2950f1f3846ea363a2dd10b605ea0022789c2eac4000cb4a6ba1a1a9f64d
+SECRET_KEY_BASE=<generate with: bin/rails secret — set in the DigitalOcean console, never commit>
 
 # Required - Devise JWT secret key
-DEVISE_JWT_SECRET_KEY=29d9a9d5db90079bda71f5af5779f5a4eb12196cec6efb8c942e7ff5fe51fe98f6f36b0236c44dcb6f35a4ae4e629808c90a2f25bc89cba56c4dba0ce7059628
+DEVISE_JWT_SECRET_KEY=<generate with: bin/rails secret — set in the DigitalOcean console, never commit>
 
 # Required - Rails environment
 RAILS_ENV=production
@@ -159,7 +161,7 @@ The Dockerfile uses BuildKit cache mounts to speed up builds:
 The Dockerfile is structured to maximize layer caching:
 
 ```
-1. Base image (ruby:3.3.0-slim) - Rarely changes
+1. Base image (ruby:3.4.9-slim) - Rarely changes
 2. System packages - Rarely changes
 3. Gemfile + bundle install - Only invalidated when dependencies change
 4. Application code - Changes frequently (but doesn't invalidate above layers)

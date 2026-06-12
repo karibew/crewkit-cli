@@ -1,9 +1,9 @@
 ---
-doc_tier: 2
-doc_type: guide
+doc_tier: 1
+doc_type: plan
 doc_status: active
 created: 2025-11-01
-last_reviewed: 2026-01-06
+last_reviewed: 2026-06-11
 owner: platform-team
 tags: [telemetry, compliance, soc2, gdpr, hipaa]
 ---

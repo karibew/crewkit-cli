@@ -1,5 +1,7 @@
 # PRD: Polyglot LSP Module for crewkit CLI
 
+> Archived design; only the symbol-index subset shipped. See `cli/src/lsp/`.
+
 ## Executive Summary
 
 Build a Language Server Protocol module within the crewkit CLI that provides:

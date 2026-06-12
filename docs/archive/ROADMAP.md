@@ -136,7 +136,7 @@
 - [x] tree-sitter parsing (Rust, TypeScript, JavaScript, Ruby)
 - [x] redb storage with SWMR for concurrent access
 - [x] Symbol index (functions, classes, methods, modules, traits, interfaces)
-- [x] LSP methods: documentSymbol, workspaceSymbol, goToDefinition, findReferences, hover
+- [x] LSP methods: documentSymbol, workspaceSymbol, goToDefinition (findReferences and hover were never shipped)
 - [x] Plugin-based Claude Code integration
   - [x] `crewkit lsp install --project` - install plugin
   - [x] `crewkit lsp uninstall --project` - remove plugin

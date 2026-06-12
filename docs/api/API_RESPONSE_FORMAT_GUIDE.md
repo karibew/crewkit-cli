@@ -6,7 +6,7 @@ created: 2026-01-03
 last_reviewed: 2026-01-06
 owner: platform-team
 related_docs:
-  - docs/prds/API_STANDARDIZATION_PLAN.md
+  - docs/archive/API_STANDARDIZATION_PLAN.md
   - CLAUDE.md
 tags: [api, reference, response-format]
 ---
@@ -279,7 +279,7 @@ end
 
 ## Resources
 
-- **Full Plan**: `API_STANDARDIZATION_PLAN.md`
+- **Full Plan**: `docs/archive/API_STANDARDIZATION_PLAN.md`
 - **BaseSerializer**: `app/serializers/base_serializer.rb`
 - **Example Serializers**: `app/serializers/resource_serializer.rb`, `app/serializers/project_serializer.rb`
 - **HATEOAS Concern**: `app/controllers/concerns/hateoas_responses.rb`

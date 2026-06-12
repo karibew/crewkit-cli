@@ -1,5 +1,7 @@
 # PRD: Notification System
 
+> ⚠️ Status (2026-06-11): This feature is implemented on the unmerged `wip/webhooks` branch and is NOT yet on `main`. Models, endpoints, and tests described here do not exist on `main` until that branch merges. The original "Target: Q1 2026" date below has passed; work is in progress on the branch.
+
 **Author**: Engineering Team
 **Status**: Ready for Development
 **Priority**: High
