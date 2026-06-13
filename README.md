@@ -109,6 +109,7 @@ Every coding session is tracked for analysis. See which agents perform best, ide
 | `crewkit feedback <msg>` | Send feedback |
 | `crewkit lsp <subcommand>` | Code intelligence (LSP) for Claude Code |
 | `crewkit lsp doctor` | Diagnose the LSP setup (`--json` for scripting) |
+| `crewkit mcp serve` | Stdio MCP server exposing crewkit's institutional memory |
 | `crewkit whoami` | Show current user |
 
 Run `crewkit --help` for full command reference.
@@ -143,6 +144,51 @@ It checks, with a pass/warn/fail marker and a fix-it hint per line:
 Exits non-zero if any check fails. The TUI sidebar's Session section also
 shows a one-line LSP status (`active · N files`, `plugin off`, or `failed`
 with a pointer to `crewkit lsp doctor`).
+
+## Institutional Memory (MCP)
+
+`crewkit mcp serve` runs a stdio [MCP](https://modelcontextprotocol.io)
+server that gives any MCP-capable agent pull access to your project's
+institutional memory:
+
+| Tool | What it answers |
+|------|-----------------|
+| `search_project_context` | Hybrid search over uploaded docs, meeting transcripts, agent emails/Slack, and vectorized past sessions |
+| `find_prior_work` | Past conversations where the team already solved something similar |
+| `get_active_work` | Who's working on what in this project right now |
+| `get_conventions` | Playbook conventions for the project's tech stack |
+| `get_blueprint_state` | Active Blueprint progress and your assigned tasks |
+
+**Automatic:** sessions launched via `crewkit code` register the server
+automatically (a generated `--mcp-config` pointing back at the crewkit
+binary, with org/project pre-resolved).
+
+**Manual** (for `claude` sessions not launched through crewkit, or other
+MCP clients):
+
+```bash
+claude mcp add crewkit -- crewkit mcp serve
+```
+
+Or add to your project's `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "crewkit": {
+      "type": "stdio",
+      "command": "crewkit",
+      "args": ["mcp", "serve"]
+    }
+  }
+}
+```
+
+In the manual path the server resolves your org/project from the git remote
+(same resolution `crewkit code` uses). Override with `--org` / `--project`
+flags or `CREWKIT_ORG_ID` / `CREWKIT_PROJECT_ID` env vars. Authentication
+reuses your `crewkit auth login` credentials; unauthenticated calls return
+an actionable error instead of failing the session.
 
 ## Headless Mode
 
