@@ -72,7 +72,7 @@ See [PLAN.md](../PLAN.md) for the concrete phase breakdown (A through E). Phase 
 | 7 | Session import survives and may become an LLM gateway. |
 | 8 | Session sharing stays; session vectorization + cross-user active-work are explicit scope. |
 
-> **Note on #7**: a client-side LLM gateway proxy already ships in the CLI (`crewkit code --llm-gateway`, `cli/src/services/llm_gateway.rs`) — it proxies and file-logs locally, but its server-side ingestion endpoint was removed in 2026-01 (commit 18c6931). "Become an LLM gateway" means restoring/replacing that server-side capture path as the live alternative to JSONL session import.
+> **Note on #7**: a client-side LLM gateway proxy ships in the CLI (`crewkit code --llm-gateway`, `cli/src/services/llm_gateway.rs`, `GatewayUploader`) and the server-side ingestion path is back and wired: `POST observability/gateway_requests → ObservabilityController#ingest_gateway_requests` (`routes.rb:614`), gated per-org by `llm_gateway_enabled?` (default-off; bodies stored only in `full` capture mode). Server capture is therefore live-but-opt-in as the alternative to JSONL session import — this supersedes the earlier "endpoint removed in 2026-01 (commit 18c6931)" note.
 
 Anything outside this list that surfaces as "built-in" today was an implementation assumption, not a requirement.
 

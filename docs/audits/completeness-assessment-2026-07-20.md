@@ -1,5 +1,21 @@
 # crewkit Completeness & Gap Assessment — 2026-07-20
 
+> **⚠️ PARTIALLY SUPERSEDED (2026-07-22).** Several gaps below closed after this snapshot and their
+> rows are now stale — verified against `main`:
+> - **§4 #3 / §2 / §5.4 — legacy `AgentExperiment` `/kit/experiments` dead-end: already removed** (no
+>   route, no `/kit/experiments` dashboard dir, no `agent_experiment.rb` model). Recommendation §8 #2 done.
+> - **§2 / §3 — convention-drift detector: shipped** (`services/trigger_classifiers/convention_drift.rb` +
+>   `anti_pattern_matcher.rb`), no longer "planned-only".
+> - **§5 / §8 #6 — the three missing sentinels: shipped** (`single_session_read_visibility`,
+>   `webhook_signature`, `orchestrator_service_auth`, plus `convention_alert_config_secret`).
+> - **§4 #11 — convention alert *delivery*: shipped** (#265: `ConventionAlertThresholdJob` +
+>   `ConventionAlertDeliveryService`).
+> - **§2 (Observe) — org-level session-sharing dashboard view: shipped** (`/kit/shares`).
+>
+> The remaining open items (Loi 25 merge, pgvector cutover, DNS/MX + Slack, org-wide active-work PRs,
+> flag flips, CLI vault key #276, `crewkit run` CLI, GitLab/Bitbucket, role-tiered autonomy enforcement)
+> are still accurate. See `reviewable_merge_commits.md` for the live state.
+
 **Method:** Read-only. Nine parallel verification agents (4 pillars, 3 component lanes,
 1 flags/doc-drift/dead-code miner, 1 security/Loi 25), each verifying claims against
 code (`file:line`), diffed against the prior baseline (`docs/audits/deep-assessment-2026-06-11.md`,
