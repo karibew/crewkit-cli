@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 GitHub Discussions
+    url: https://github.com/karibew/crewkit-cli/discussions
+    about: Ask questions, share ideas, and engage with the community
+  - name: 📖 Documentation
+    url: https://github.com/karibew/crewkit-cli/tree/main/docs
+    about: Browse our documentation and guides
+  - name: 🔒 Security Issue
+    url: https://github.com/karibew/crewkit-cli/blob/main/SECURITY.md
+    about: Report security vulnerabilities privately
