@@ -216,9 +216,9 @@ mkdir -p .claude/.backups
 **Solution**:
 1. Check network speed
 2. Reduce number of agents in project settings
-3. Use `--no-watch` flag to skip file watching:
+3. Run with `--debug` to see which step is slow:
    ```bash
-   crewkit code --no-watch
+   crewkit code --debug
    ```
 
 ---
@@ -235,7 +235,7 @@ mkdir -p .claude/.backups
 cat .agent/config.yml
 
 # Regenerate config
-crewkit init --force
+crewkit init -y
 ```
 
 Expected format:
