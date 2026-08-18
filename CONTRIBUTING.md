@@ -1,31 +1,35 @@
 # Contributing to crewkit CLI
 
-Thank you for your interest in contributing to crewkit! 🎉
+Thank you for your interest in contributing to crewkit.
 
 ---
 
 ## How to Contribute
 
-Since the crewkit codebase is private, we welcome the following types of contributions:
+The crewkit codebase is private — this repository hosts releases, public
+documentation, and the issue tracker. Here's how you can contribute:
 
-### 1. 🐛 Bug Reports
+### 1. Bug Reports
 
 Found a bug? Please [open an issue](https://github.com/karibew/crewkit-cli/issues/new?template=bug_report.yml) with:
 - Clear description of the problem
 - Steps to reproduce
 - Expected vs actual behavior
-- Environment details (OS, Node version, CLI version)
-- Error messages or logs (sanitize any sensitive info!)
+- Environment details (OS, CLI version from `crewkit --version`, install method)
+- Error messages or logs — the per-session debug log lives at
+  `.crewkit/debug-latest.log` in your project root (sanitize any sensitive info!)
 
-### 2. 💡 Feature Requests
+For code-intelligence problems, attach `crewkit lsp doctor` output.
+
+### 2. Feature Requests
 
 Have an idea? [Open a feature request](https://github.com/karibew/crewkit-cli/issues/new?template=feature_request.yml) describing:
 - What problem it solves
 - Proposed solution
 - Alternative solutions considered
-- Why this would benefit the community
+- Why this would benefit other teams using crewkit
 
-### 3. 📖 Documentation
+### 3. Documentation
 
 Help improve our docs:
 - Fix typos or unclear explanations
@@ -37,9 +41,9 @@ To contribute documentation:
 1. Fork this repository
 2. Make your changes
 3. Submit a pull request
-4. We'll review and merge!
+4. We'll review it
 
-### 4. 💬 Community Support
+### 4. Community Support
 
 Help other users:
 - Answer questions in [Discussions](https://github.com/karibew/crewkit-cli/discussions)
@@ -53,8 +57,9 @@ Help other users:
 ### Before Opening an Issue
 
 - **Search existing issues** to avoid duplicates
-- **Check the FAQ** and troubleshooting guide
-- **Update to latest version** (`npm update -g @crewkit/cli`)
+- **Check the [FAQ](docs/faq.md)** and [troubleshooting guide](docs/troubleshooting.md)
+- **Update to the latest version** (`crewkit update`, or `brew upgrade crewkit` /
+  `npm update -g @crewkit/cli` if you installed through a package manager)
 
 ### Writing Good Issues
 
@@ -68,14 +73,13 @@ When running `crewkit code` on Windows 11, I get:
 Error: ENOENT: no such file or directory
 
 Steps to reproduce:
-1. Install @crewkit/cli@0.1.4
+1. Install crewkit 0.3.3 (via choco)
 2. Run crewkit init
 3. Run crewkit code
 
 Environment:
 - OS: Windows 11
-- Node: v20.10.0
-- CLI: @crewkit/cli@0.1.4
+- CLI: crewkit 0.3.3 (choco install)
 
 Expected: Claude Code should launch
 Actual: ENOENT error
@@ -114,21 +118,14 @@ Benefits:
 - Help others understand technical concepts
 - Share knowledge generously
 
-### Be Patient
-
-- Maintainers are volunteers
-- Response times may vary
-- Complex issues take time to investigate
-
 ---
 
 ## Response Times
 
-We strive to:
-- **Acknowledge issues** within 2-3 business days
-- **Label issues** (bug/enhancement/question) within 1 week
-- **Fix critical bugs** in next patch release
-- **Consider feature requests** for future releases
+crewkit is built by a small team. As a rule of thumb, we aim to acknowledge
+and label new issues within a few business days, prioritize critical bugs
+for the next release, and consider feature requests as part of roadmap
+planning. These are targets, not guarantees.
 
 ---
 
@@ -148,4 +145,4 @@ Instead, please see [SECURITY.md](SECURITY.md) for responsible disclosure.
 
 ---
 
-Thank you for helping make crewkit better! 🙏
+Thank you for helping make crewkit better.

@@ -26,14 +26,18 @@ curl -fsSL https://crewkit.io/install.sh | sh
 
 ## Why crewkit?
 
-- **Team memory** - Decisions, docs, meeting transcripts, and past sessions become searchable project context, injected automatically when a session starts.
-- **Find prior work** - Every analyzed conversation is indexed. Ask "has anyone touched this before?" and get the session that did.
-- **Agents as teammates** - Project agents get their own Slack handle and answer in-thread with full project context. Teammates see each other's active work live.
-- **Team consistency** - Everyone uses the same agent configs. No more "works on my machine" for AI prompts.
-- **Role-based modes** - Juniors get coaching mode (agents guide, don't code). Seniors get full autonomy. Same agents, different behaviors.
-- **Measure what works** - Every session records the exact version of every agent that ran. A/B test configurations and deploy winners on evidence.
+- **Team memory** — Decisions, docs, meeting transcripts, and past sessions become searchable project context, injected automatically when a session starts.
+- **Find prior work** — Every analyzed conversation is indexed. Ask "has anyone touched this before?" and get the session that did.
+- **Agents as teammates** — Project agents get their own Slack handle and answer in-thread with full project context. Teammates see each other's active work live.
+- **Team consistency** — Everyone uses the same agent configs. No more "works on my machine" for AI prompts.
+- **Role-based modes** — Juniors get coaching mode (agents guide, don't code). Seniors get full autonomy. Same agents, different behaviors.
+- **Measure what works** — Every session records the exact version of every agent that ran. A/B test configurations and deploy winners on evidence.
 
 ## Quick Start
+
+You'll need a crewkit account — sign up at [crewkit.io](https://crewkit.io)
+(plans and a free tier are described on the [pricing page](https://crewkit.io/pricing)).
+Then:
 
 ```bash
 # 1. Connect your account
@@ -73,11 +77,15 @@ Modes are applied automatically based on your team role.
 
 ### A/B Testing for Prompts
 
-Test changes to your agent configurations with real usage data. Experiments are
-created and managed in the dashboard; the CLI can inspect them:
+Test changes to your agent configurations with real usage data — create an
+experiment, compare the variants on live sessions, and promote the winner:
 
 ```bash
-crewkit experiments show <slug>   # View an experiment's details
+crewkit experiments create <resource>   # Create an experiment for a resource
+crewkit experiments list                # List experiments
+crewkit experiments show <slug>         # View an experiment's details
+crewkit experiments metrics <slug>      # Compare variant performance
+crewkit experiments deploy <slug>       # Promote the winning variant
 ```
 
 ### Session Tracking
@@ -108,7 +116,9 @@ Every coding session is tracked for analysis. See which agents perform best, ide
 | `crewkit sessions import` | Import historical sessions from JSONL |
 | `crewkit blueprint <subcommand>` | AI-powered project planning (create, list, show, tasks, ...) |
 | `crewkit sidecar` | Observe a native `claude` session without the TUI (Unix; also `crewkit code --no-tui`) |
-| `crewkit save-state` | Save and restore working states (`ls`, `show`, `rm`) |
+| `crewkit members <subcommand>` | Manage organization members (list, invite, update, remove) |
+| `crewkit usage` | Show usage and cost summary |
+| `crewkit save-state` | Manage saved working states (`ls`, `show`, `rm`) |
 | `crewkit completions <shell>` | Generate shell completions |
 | `crewkit update` | Update crewkit to the latest version |
 | `crewkit feedback <msg>` | Send feedback |
@@ -248,6 +258,27 @@ Privacy:
 `--llm-gateway-port <PORT>` overrides the default ephemeral port. The gateway
 is skipped under Bedrock/Vertex routing and in no-auth/offline mode.
 
+## Privacy & Data Handling
+
+Built for teams that have to answer "where does our data go" — including
+compliance regimes like Quebec's Law 25:
+
+- **What leaves your machine**: session telemetry (events, timing, token
+  usage, cost, outcomes) is sent over HTTPS to your organization's crewkit
+  account. Hook events are sanitized before upload.
+- **Content capture is org-controlled**: request/response bodies are captured
+  only when your organization's capture mode is `full`, and are
+  secret-redacted first. Otherwise only metadata is recorded.
+- **Sensitive sessions**: `crewkit code --sensitive` excludes a session's
+  content from capture, search indexing, and gateway telemetry.
+- **Audit trail**: every session records the exact version of every agent
+  that ran — attribution you can show an auditor.
+- **Signed releases**: binaries are signed and checksummed; the auto-updater
+  verifies signatures against keys compiled into the CLI and halts on any
+  mismatch. The install script verifies SHA256 checksums.
+- **Crash reporting**: error reports go to Sentry by default; disable with
+  `CREWKIT_NO_TELEMETRY=1` (or the standard `DO_NOT_TRACK=1`).
+
 ## Session Resume
 
 Continue where you left off:
@@ -264,7 +295,7 @@ crewkit code -r abc123 --fork-session  # Fork into new session
 | Platform | Architecture | Status |
 |----------|--------------|--------|
 | macOS | Apple Silicon (arm64) | Supported |
-| macOS | Intel (x64) | Not yet available |
+| macOS | Intel (x64) | Not yet available — [open an issue](https://github.com/karibew/crewkit-cli/issues) if you need it |
 | Linux | x64 | Supported |
 | Windows | x64 | Supported |
 
@@ -303,6 +334,7 @@ crewkit init --workspace   # Create and register a multi-repo workspace project
 
 - [Website](https://crewkit.io)
 - [Documentation](https://crewkit.io/docs)
+- [Installation Guide](docs/installation.md) · [Authentication](docs/authentication.md) · [FAQ](docs/faq.md) · [Troubleshooting](docs/troubleshooting.md)
 - [Install Script](https://crewkit.io/install.sh)
 - [Changelog](https://github.com/karibew/crewkit-cli/releases)
 

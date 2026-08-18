@@ -1,15 +1,23 @@
 # Installation Guide
 
-## Prerequisites
+crewkit ships as a native binary — no runtime required. Node.js 18+ is only
+needed if you install through npm.
 
-- **Operating System**: macOS, Linux, or Windows
-- **Node.js** (optional): Version 18+ if using npm install method
+Supported platforms: macOS (Apple Silicon), Linux (x64), Windows (x64).
 
 ---
 
-## Install via curl (Recommended)
+## Install via Homebrew (macOS/Linux)
 
-The fastest way to install crewkit:
+```bash
+brew install karibew/tap/crewkit
+```
+
+Updates come through Homebrew: `brew upgrade crewkit`.
+
+---
+
+## Install via curl (macOS/Linux)
 
 ```bash
 curl -fsSL https://crewkit.io/install.sh | sh
@@ -17,17 +25,17 @@ curl -fsSL https://crewkit.io/install.sh | sh
 
 This will:
 - Detect your platform automatically
-- Download the appropriate binary
-- Verify the checksum
+- Download the appropriate binary from GitHub Releases
+- Verify the SHA256 checksum
 - Install to `~/.local/bin`
 
 ### Install Options
 
 ```bash
-# Install specific version
-curl -fsSL https://crewkit.io/install.sh | sh -s -- --version 0.2.0
+# Install a specific version
+curl -fsSL https://crewkit.io/install.sh | sh -s -- --version X.Y.Z
 
-# Install to custom directory
+# Install to a custom directory
 CREWKIT_INSTALL_DIR=/usr/local/bin curl -fsSL https://crewkit.io/install.sh | sh
 
 # Show help
@@ -36,11 +44,11 @@ curl -fsSL https://crewkit.io/install.sh | sh -s -- --help
 
 ### Add to PATH
 
-After installation, add crewkit to your PATH:
+If `~/.local/bin` isn't already on your PATH:
 
 ```bash
 # Add to ~/.bashrc, ~/.zshrc, or ~/.profile
-export PATH="$HOME/.crewkit/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 ```
 
 Restart your terminal or run `source ~/.bashrc` (or `~/.zshrc`).
@@ -49,76 +57,78 @@ Restart your terminal or run `source ~/.bashrc` (or `~/.zshrc`).
 
 ## Install via npm
 
-If you have Node.js 18+, you can also install via npm:
+Requires Node.js 18+:
 
 ```bash
 npm install -g @crewkit/cli
 ```
+
+The npm package bundles prebuilt binaries per platform — nothing is compiled
+or downloaded at install time.
 
 Verify installation:
 ```bash
 crewkit --version
 ```
 
-### Local Installation
+---
 
-Install in a specific project:
+## Install via Chocolatey (Windows)
 
-```bash
-npm install @crewkit/cli
+```powershell
+choco install crewkit
 ```
 
-Run via npx:
-```bash
-npx crewkit --version
-```
+Updates come through Chocolatey: `choco upgrade crewkit`.
 
 ---
 
 ## Update crewkit
 
-### Auto-update (built-in)
+### Auto-update (curl installs)
 
-crewkit automatically updates itself in the background. On every startup, it checks for updates (hourly cache) and downloads new versions automatically. The update takes effect on the next CLI invocation.
+For binaries installed via curl/install script, crewkit keeps itself current:
+on startup it checks for a new release (at most hourly), verifies the release
+signature against keys built into the CLI, and installs it in the background.
+The update takes effect on the next invocation.
 
 ```bash
-# Manual check/update (if needed)
-crewkit update --check
-crewkit update
+crewkit update --check   # See if an update is available
+crewkit update           # Update now
 ```
 
-### Manual update
+To disable background auto-update, set `CREWKIT_NO_AUTO_UPDATE=1`.
 
-**If installed via curl:**
-```bash
-curl -fsSL https://crewkit.io/install.sh | sh
-```
+### Package-manager installs
 
-**If installed via npm:**
-```bash
-npm update -g @crewkit/cli
-```
+If crewkit was installed through Homebrew, npm, or Chocolatey, self-update
+defers to the package manager (and tells you the right command):
 
-Check what version you're running:
 ```bash
-crewkit --version
+brew upgrade crewkit          # Homebrew
+npm update -g @crewkit/cli    # npm
+choco upgrade crewkit         # Chocolatey
 ```
 
 ---
 
 ## Uninstall
 
+Remove the binary using the method you installed with:
+
 ```bash
-npm uninstall -g @crewkit/cli
+brew uninstall crewkit           # Homebrew
+npm uninstall -g @crewkit/cli    # npm
+choco uninstall crewkit          # Chocolatey
+rm ~/.local/bin/crewkit          # curl install
 ```
 
-This will remove:
-- The `crewkit` command
-- All installed plugins
+If you use the code-intelligence plugin, run `crewkit lsp uninstall` first
+to deregister it from Claude Code.
 
-**Note**: Your authentication tokens and configs will remain in:
-- `~/.config/crewkit/` (configs)
-- OS Keychain (tokens)
+**Note**: your login and configs remain in:
+- `~/.config/crewkit/` (settings and the encrypted auth vault)
+- `~/.cache/crewkit/` (update cache and markers)
 
 To fully clean up:
 ```bash
@@ -126,92 +136,8 @@ rm -rf ~/.config/crewkit
 rm -rf ~/.cache/crewkit
 ```
 
----
-
-## Platform-Specific Notes
-
-### macOS
-
-No additional setup required. Tokens are stored in macOS Keychain.
-
-### Linux
-
-Tokens are stored using Secret Service (GNOME Keyring, KWallet, etc.)
-
-If you get keychain errors, install:
-```bash
-# Ubuntu/Debian
-sudo apt-get install libsecret-1-dev
-
-# Fedora
-sudo dnf install libsecret-devel
-
-# Arch
-sudo pacman -S libsecret
-```
-
-### Windows
-
-No additional setup required. Tokens are stored in Windows Credential Manager.
-
----
-
-## Troubleshooting
-
-### Permission Errors
-
-If you get `EACCES` errors on macOS/Linux:
-
-```bash
-# Option 1: Use a Node version manager (recommended)
-# Install nvm: https://github.com/nvm-sh/nvm
-nvm install 18
-nvm use 18
-npm install -g @crewkit/cli
-
-# Option 2: Change npm's default directory
-mkdir ~/.npm-global
-npm config set prefix '~/.npm-global'
-echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
-source ~/.bashrc
-npm install -g @crewkit/cli
-```
-
-### Command Not Found
-
-If `crewkit` command is not found after installation:
-
-1. Check npm global bin path:
-   ```bash
-   npm bin -g
-   ```
-
-2. Add it to your PATH:
-   ```bash
-   # Add to ~/.bashrc, ~/.zshrc, or ~/.profile
-   export PATH="$(npm bin -g):$PATH"
-   ```
-
-3. Restart your terminal
-
-### Installation Fails
-
-If installation fails:
-
-1. Clear npm cache:
-   ```bash
-   npm cache clean --force
-   ```
-
-2. Try again:
-   ```bash
-   npm install -g @crewkit/cli
-   ```
-
-3. Check npm logs:
-   ```bash
-   npm install -g @crewkit/cli --verbose
-   ```
+Projects where you ran crewkit also have a local `.crewkit/` directory
+(debug logs, caches) you can delete at any time.
 
 ---
 

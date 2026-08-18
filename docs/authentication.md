@@ -1,6 +1,7 @@
 # Authentication Guide
 
-crewkit uses OAuth 2.1 device flow for secure authentication. No passwords are stored on your machine.
+crewkit uses OAuth 2.1 device flow for secure authentication. No passwords
+are ever entered into or stored by the CLI.
 
 ---
 
@@ -27,9 +28,11 @@ crewkit auth logout
 crewkit auth login
 ```
 
-You'll see output like:
+The CLI shows a verification URL and one-time code, and opens your browser
+automatically when it can:
+
 ```
-Please visit: https://crewkit.io/device
+Please visit: https://crewkit.io/device-verify?code=ABCD-EFGH
 Enter code: ABCD-EFGH
 
 Waiting for authentication...
@@ -37,17 +40,15 @@ Waiting for authentication...
 
 ### Step 2: Authenticate in Browser
 
-1. Open the URL shown: `https://crewkit.io/device`
-2. Enter the code: `ABCD-EFGH`
+1. If the browser didn't open, visit the URL from the terminal
+2. Confirm the code matches what the CLI displayed
 3. Sign in with your crewkit.io account
 4. Authorize the CLI
 
 ### Step 3: Success
 
-Once authorized, the CLI will automatically:
-- Receive access token
-- Store it securely in your OS keychain
-- Display success message
+Once authorized, the CLI receives its tokens, stores them encrypted, and
+confirms:
 
 ```
 ✓ Authentication successful!
@@ -59,12 +60,15 @@ Organization: acme-corp
 
 ## Token Storage
 
-Tokens are stored securely:
-- **macOS**: Keychain
-- **Linux**: Secret Service (GNOME Keyring, KWallet)
-- **Windows**: Credential Manager
+Tokens are stored encrypted at rest in a local vault:
 
-**Tokens are NEVER stored in plain text files.**
+- **Location**: `~/.config/crewkit/` (`auth.vault` + key file)
+- **No plaintext**: tokens are never written unencrypted to disk
+- **No OS keychain required**: works the same on macOS, Linux (including
+  headless servers), and Windows
+
+For CI and scripts, set the `CREWKIT_TOKEN` environment variable — it takes
+precedence over the stored login. Keep it in your CI provider's secret store.
 
 ---
 
@@ -74,22 +78,8 @@ Tokens are stored securely:
 crewkit auth status
 ```
 
-Output when authenticated:
-```
-✓ Authenticated
-
-User: you@example.com
-Organization: acme-corp
-Role: senior
-Token expires: in 45 minutes
-```
-
-Output when not authenticated:
-```
-✗ Not authenticated
-
-Run `crewkit auth login` to get started.
-```
+Shows whether you're authenticated, as whom, and your organization. When not
+authenticated, run `crewkit auth login` to get started.
 
 ---
 
@@ -99,23 +89,19 @@ Run `crewkit auth login` to get started.
 crewkit auth logout
 ```
 
-This will:
-- Remove tokens from OS keychain
-- Revoke the access token on the server
-- Clear any cached data
+This removes the stored credentials from your machine.
 
 ---
 
 ## Token Expiry
 
-- **Access tokens**: Expire after 1 hour
-- **Refresh tokens**: Automatically renew access tokens
-- **Auto-refresh**: Happens transparently
+- **Access tokens**: expire after 4 hours
+- **Refresh tokens**: automatically renew access tokens, and are rotated on
+  every use
 
-If your access token expires, the CLI will automatically:
-1. Use refresh token to get new access token
-2. Update keychain
-3. Continue operation
+When an access token expires, the CLI transparently refreshes it and
+continues — you only re-authenticate if the refresh token itself has
+expired or been revoked.
 
 ---
 
@@ -133,87 +119,52 @@ crewkit auth login
 
 ## Troubleshooting
 
-### Keychain Access Denied (macOS)
+### Login Hangs or Times Out
 
-If you get keychain permission errors:
+1. Check that you can reach https://crewkit.io in a browser
+2. Complete the browser step before the device code expires; if it expired,
+   run `crewkit auth login` again for a fresh code
 
-1. Open **Keychain Access.app**
-2. Search for "crewkit"
-3. Right-click → Get Info
-4. Access Control tab → Add `crewkit` to "Always allow access"
+### Corrupted Credentials
 
-### Secret Service Not Available (Linux)
-
-If you get "No secret service available":
+If auth calls fail persistently after a successful login:
 
 ```bash
-# Ubuntu/Debian
-sudo apt-get install gnome-keyring
-
-# Fedora
-sudo dnf install gnome-keyring
-
-# Arch
-sudo pacman -S gnome-keyring
+crewkit auth logout
+rm -f ~/.config/crewkit/auth.vault ~/.config/crewkit/.auth.key
+crewkit auth login
 ```
 
-Start the keyring daemon:
-```bash
-eval $(gnome-keyring-daemon --start)
-export $(gnome-keyring-daemon --start)
-```
+### CI Sessions Use the Wrong Account
 
-### Token Refresh Fails
-
-If token refresh fails:
-
-1. Log out: `crewkit auth logout`
-2. Clear cache: `rm -rf ~/.cache/crewkit`
-3. Log in again: `crewkit auth login`
+`CREWKIT_TOKEN` takes precedence over your stored login. If a local shell
+has it exported, unset it: `unset CREWKIT_TOKEN`.
 
 ### Browser Doesn't Open
 
-The CLI doesn't automatically open your browser. Manually:
+In non-interactive environments the CLI prints the URL instead of opening a
+browser:
 
-1. Copy the URL from terminal
-2. Open it in your browser
+1. Copy the URL from the terminal
+2. Open it in any browser (another machine works too)
 3. Enter the code shown
-4. Return to terminal
+4. Return to the terminal
 
 ---
 
 ## Security Best Practices
 
-### Do Not Share Tokens
+### Do Not Share Tokens or Codes
 
 - Never share your device code with anyone
 - Never commit tokens to git
 - Never post tokens in issues/forums
 
-### Revoke Lost Tokens
+### If a Machine Is Lost or Compromised
 
-If you lose access to a machine:
-
-1. Log in to https://crewkit.io
-2. Go to Settings → Security
-3. Revoke access for lost devices
-
-### Use Separate Accounts
-
-For work vs personal projects:
-
-- Use different crewkit.io accounts
-- Different organizations
-- Log out/in when switching
-
----
-
-## API Access
-
-All API requests include:
-- `Authorization: Bearer <access_token>` header
-- Automatic token refresh
-- Request retries on auth failures
+- Your access tokens expire within 4 hours on their own
+- Review recent account activity on your profile at https://crewkit.io
+- Contact **security@crewkit.io** to revoke credentials for the lost device
 
 ---
 

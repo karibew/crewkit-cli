@@ -4,67 +4,63 @@ Common issues and solutions for crewkit CLI.
 
 ---
 
+## First Stop: Debug Logs
+
+Almost every issue below is easier to diagnose with the debug log. crewkit
+writes a per-session log to `.crewkit/` in your project root:
+
+```bash
+crewkit code --debug          # --debug works on any command
+tail -f .crewkit/debug-latest.log
+```
+
+For code-intelligence (LSP) issues, run `crewkit lsp doctor` — it checks the
+whole setup and prints a fix-it hint per failing line.
+
+---
+
 ## Installation Issues
 
 ### Command Not Found After Install
 
 **Problem**: `crewkit: command not found`
 
-**Solution**:
+**Solution** depends on the install method:
+
 ```bash
-# Check npm global bin path
-npm bin -g
+# curl install — ensure ~/.local/bin is on PATH
+# (add to ~/.bashrc, ~/.zshrc, or ~/.profile)
+export PATH="$HOME/.local/bin:$PATH"
 
-# Add to PATH (add to ~/.bashrc, ~/.zshrc, or ~/.profile)
-export PATH="$(npm bin -g):$PATH"
-
-# Reload shell
-source ~/.bashrc  # or ~/.zshrc
+# npm install — ensure npm's global bin dir is on PATH
+export PATH="$(npm prefix -g)/bin:$PATH"
 ```
 
-### Permission Errors (EACCES)
+Then restart your terminal or `source` your shell profile.
 
-**Problem**: `EACCES: permission denied`
+### Permission Errors with npm (EACCES)
 
-**Solution**: Use a Node version manager:
+**Problem**: `EACCES: permission denied` during `npm install -g`
+
+**Solution**: use a Node version manager (nvm, fnm, mise) instead of a
+system Node, or change npm's global prefix to a user-writable directory:
+
 ```bash
-# Install nvm
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-
-# Install Node
-nvm install 18
-nvm use 18
-
-# Install crewkit
+mkdir ~/.npm-global
+npm config set prefix '~/.npm-global'
+export PATH=~/.npm-global/bin:$PATH
 npm install -g @crewkit/cli
+```
+
+Alternatively, skip Node entirely — the curl install has no dependencies:
+
+```bash
+curl -fsSL https://crewkit.io/install.sh | sh
 ```
 
 ---
 
 ## Authentication Issues
-
-### Keychain Access Denied (macOS)
-
-**Problem**: "User denied access to keychain"
-
-**Solution**:
-1. Open **Keychain Access.app**
-2. Search for "crewkit"
-3. Right-click → Get Info → Access Control
-4. Add `crewkit` to "Always allow access"
-
-### No Secret Service (Linux)
-
-**Problem**: "No secret service available"
-
-**Solution**:
-```bash
-# Install keyring
-sudo apt-get install gnome-keyring libsecret-1-0
-
-# Start daemon
-eval $(gnome-keyring-daemon --start)
-```
 
 ### Token Expired
 
@@ -73,6 +69,25 @@ eval $(gnome-keyring-daemon --start)
 **Solution**:
 ```bash
 crewkit auth logout
+crewkit auth login
+```
+
+### Persistent Auth Failures
+
+**Problem**: 401 errors even after logging in again
+
+**Solution**: check for a stale `CREWKIT_TOKEN` in your environment — it
+takes precedence over the stored login:
+
+```bash
+env | grep CREWKIT_TOKEN && unset CREWKIT_TOKEN
+```
+
+If the problem persists, reset the credential vault:
+
+```bash
+crewkit auth logout
+rm -f ~/.config/crewkit/auth.vault ~/.config/crewkit/.auth.key
 crewkit auth login
 ```
 
@@ -100,14 +115,21 @@ crewkit auth login
    git remote add origin git@github.com:org/repo.git
    ```
 
+If detection stays ambiguous (e.g., multiple remotes), pin the project:
+
+```bash
+crewkit init
+```
+
+This writes `.agent/config.yml` with your org and project slugs.
+
 ### Project Not Found in crewkit
 
 **Problem**: "Project not found: org/repo"
 
 **Solution**:
-1. Log in to https://crewkit.io
-2. Create organization and project
-3. Run `crewkit init org project`
+1. Log in to https://crewkit.io and check the project exists
+2. Run `crewkit init` to pin the org/project mapping locally
 
 ---
 
@@ -132,26 +154,11 @@ crewkit auth login
    - Log in to https://crewkit.io
    - Check organization/project settings
 
-4. Force sync:
+4. Force a clean re-sync:
    ```bash
-   rm -rf .claude/agents
+   rm -rf .claude/agents .crewkit/cache
    crewkit code
    ```
-
-### File Backup Errors
-
-**Problem**: "Could not create backup"
-
-**Solution**:
-```bash
-# Check permissions
-ls -la .claude
-
-# Recreate directory
-rm -rf .claude
-mkdir -p .claude/agents
-mkdir -p .claude/.backups
-```
 
 ---
 
@@ -161,35 +168,23 @@ mkdir -p .claude/.backups
 
 **Problem**: "Claude Code executable not found"
 
-**Solution**:
-1. Install Claude Code from https://claude.ai/download
+crewkit launches the `claude` CLI from your PATH.
 
-2. Ensure it's in PATH:
+**Solution**:
+1. Install Claude Code — see https://docs.claude.com/en/docs/claude-code
+
+2. Verify it's reachable:
    ```bash
-   # macOS
    which claude
-
-   # Add to PATH if needed
-   export PATH="/Applications/Claude.app/Contents/MacOS:$PATH"
+   claude --version
    ```
 
-3. Try absolute path:
-   ```bash
-   CLAUDE_PATH="/Applications/Claude.app/Contents/MacOS/claude" crewkit code
-   ```
+3. If it's installed but not found, your shell's PATH differs from the
+   terminal where you installed it — add Claude Code's install directory to
+   the same shell profile crewkit runs under.
 
-### Claude Code Crashes
-
-**Problem**: Claude Code crashes on launch
-
-**Solution**:
-1. Check Claude Code version (must be latest)
-2. Clear Claude Code cache
-3. Check `.claude/agents/` files for corruption:
-   ```bash
-   ls -lh .claude/agents/
-   file .claude/agents/*
-   ```
+Note: Claude Code (the `claude` CLI) is not the Claude Desktop app —
+installing the desktop app does not provide the `claude` binary.
 
 ---
 
@@ -201,153 +196,41 @@ mkdir -p .claude/.backups
 
 **Solution**:
 1. Check internet connection
-2. Check if API is up: https://status.crewkit.io
-3. Try with verbose logging:
-   ```bash
-   DEBUG=* crewkit code
-   ```
-
-4. Check firewall/proxy settings
-
-### Slow Syncing
-
-**Problem**: Agent syncing takes a long time
-
-**Solution**:
-1. Check network speed
-2. Reduce number of agents in project settings
-3. Run with `--debug` to see which step is slow:
+2. Retry with the debug log:
    ```bash
    crewkit code --debug
+   tail .crewkit/debug-latest.log
    ```
+3. Check firewall/proxy settings — the CLI needs HTTPS to `api.crewkit.io`
+   and `github.com` (for updates)
 
 ---
 
-## Configuration Issues
+## Update Issues
 
-### Invalid Config File
+### Auto-Update Keeps Failing
 
-**Problem**: "Invalid .agent/config.yml"
-
-**Solution**:
-```bash
-# Validate YAML syntax
-cat .agent/config.yml
-
-# Regenerate config
-crewkit init -y
-```
-
-Expected format:
-```yaml
-org: your-org
-project: your-project
-```
-
-### Merge Conflict in Config
-
-**Problem**: Git merge conflict in `.agent/config.yml`
+The updater verifies release signatures and pauses itself after a signature
+mismatch rather than retrying forever — it will tell you on a later run.
 
 **Solution**:
 ```bash
-# Accept theirs
-git checkout --theirs .agent/config.yml
-
-# Or accept ours
-git checkout --ours .agent/config.yml
-
-# Mark as resolved
-git add .agent/config.yml
+crewkit update --check     # See what the updater thinks
+crewkit update             # Force an update attempt
 ```
 
----
+If you installed via Homebrew, npm, or Chocolatey, self-update intentionally
+defers to that package manager and prints the right command instead.
 
-## Performance Issues
-
-### High CPU Usage
-
-**Problem**: `crewkit` process using high CPU
-
-**Solution**:
-- Disable file watching: `crewkit code --no-watch`
-- Check for runaway processes: `ps aux | grep crewkit`
-- Update to latest version: `npm update -g @crewkit/cli`
-
-### High Memory Usage
-
-**Problem**: `crewkit` using too much memory
-
-**Solution**:
-- Restart the CLI
-- Clear cache: `rm -rf ~/.cache/crewkit`
-- Report issue with memory profile
-
----
-
-## Debugging
-
-### Enable Debug Logging
-
-```bash
-# All debug output
-DEBUG=* crewkit code
-
-# Specific modules
-DEBUG=crewkit:* crewkit code
-DEBUG=crewkit:api crewkit code
-```
-
-### Check Logs
-
-```bash
-# macOS
-tail -f ~/Library/Logs/crewkit/debug.log
-
-# Linux
-tail -f ~/.cache/crewkit/logs/debug.log
-
-# Windows
-type %APPDATA%\crewkit\logs\debug.log
-```
-
-### Report an Issue
-
-When reporting issues, include:
-
-1. **Version**: `crewkit --version`
-2. **OS**: `uname -a` (macOS/Linux) or `systeminfo` (Windows)
-3. **Node**: `node --version`
-4. **Error message**: Full error output
-5. **Steps to reproduce**: Exact commands run
-6. **Logs**: Debug logs if available
-
-Use the [bug report template](https://github.com/karibew/crewkit-cli/issues/new?template=bug_report.yml).
+To disable background auto-update entirely: `CREWKIT_NO_AUTO_UPDATE=1`.
 
 ---
 
 ## Common Error Messages
 
-### `ENOENT: no such file or directory`
-
-**Cause**: File or directory doesn't exist
-
-**Fix**: Check file paths, ensure `.claude/` directory exists
-
-### `EACCES: permission denied`
-
-**Cause**: Insufficient permissions
-
-**Fix**: Check file permissions, use `chmod` if needed
-
-### `ETIMEDOUT: network timeout`
-
-**Cause**: Network connection issue
-
-**Fix**: Check internet, retry, check firewall
-
 ### `401 Unauthorized`
 
-**Cause**: Invalid or expired token
+**Cause**: Invalid or expired token (or a stale `CREWKIT_TOKEN` env var)
 
 **Fix**: `crewkit auth logout && crewkit auth login`
 
@@ -356,6 +239,28 @@ Use the [bug report template](https://github.com/karibew/crewkit-cli/issues/new?
 **Cause**: Project doesn't exist
 
 **Fix**: Verify org/project in https://crewkit.io, run `crewkit init`
+
+### `ETIMEDOUT` / network timeout
+
+**Cause**: Network connection issue
+
+**Fix**: Check internet, retry, check firewall
+
+---
+
+## Reporting an Issue
+
+When reporting issues, include:
+
+1. **Version**: `crewkit --version`, and how you installed (curl/brew/npm/choco)
+2. **OS**: `uname -a` (macOS/Linux) or `systeminfo` (Windows)
+3. **Error message**: full error output
+4. **Steps to reproduce**: exact commands run
+5. **Logs**: the relevant part of `.crewkit/debug-latest.log`
+   (sanitize anything sensitive), and `crewkit lsp doctor` output for
+   code-intelligence issues
+
+Use the [bug report template](https://github.com/karibew/crewkit-cli/issues/new?template=bug_report.yml).
 
 ---
 
@@ -372,5 +277,5 @@ Use the [bug report template](https://github.com/karibew/crewkit-cli/issues/new?
 
 - [Installation Guide](installation.md)
 - [Authentication Guide](authentication.md)
-- [Command Reference](commands.md)
+- [Command Reference](../README.md#commands)
 - [FAQ](faq.md)

@@ -6,22 +6,56 @@
 
 ### What is crewkit?
 
-crewkit is the institutional memory and governance layer for AI-assisted engineering. It gives Claude Code your team's context, enforces your standards with role-based configurations, and measures which agent versions actually work.
+crewkit is the institutional memory and governance layer for AI-assisted
+engineering. It gives Claude Code your team's context, enforces your
+standards with role-based configurations, and measures which agent versions
+actually work.
 
 ### Is crewkit free?
 
-crewkit offers both free and paid tiers. Check https://crewkit.io/pricing for details.
+crewkit offers both free and paid tiers. Check https://crewkit.io/pricing
+for details.
 
 ### Is the source code open source?
 
-The source code is currently private, but we track issues and documentation publicly on GitHub.
+The source code is currently private, but we track issues and documentation
+publicly on GitHub.
 
 ### What languages/frameworks does crewkit support?
 
-crewkit works with any project that Claude Code supports. Agent configurations can be customized for:
+crewkit works with any project that Claude Code supports. Agent
+configurations can be customized for:
 - Rails, Python, Node.js, Go, Rust, Java, etc.
 - Frontend frameworks (React, Vue, Angular, etc.)
 - Any language or framework
+
+### How is this different from committing a CLAUDE.md to the repo?
+
+A committed CLAUDE.md is a snapshot with no history, no inheritance, and no
+feedback loop. crewkit configurations are versioned (every save is an
+immutable version you can roll back), inherited (platform → organization →
+project), and measured — every session records the exact version of every
+agent that ran, so you can see which configuration changes actually improved
+outcomes, and A/B test them.
+
+### Does crewkit send my code to your servers?
+
+Session telemetry (events, timing, token usage, cost, outcomes) goes to your
+organization's crewkit account over HTTPS — nowhere else. Hook events are
+sanitized before upload. Request/response bodies are captured only when your
+organization enables `full` capture mode, and are secret-redacted first.
+Sessions started with `--sensitive` are excluded from content capture and
+search indexing entirely. See the
+[Privacy & Data Handling](../README.md#privacy--data-handling) section for
+the full picture.
+
+### Can crewkit help with compliance (e.g., Quebec's Law 25)?
+
+That's a core use case. crewkit gives you an audit trail of AI-assisted
+work: which agent version ran in which session, under which conventions, at
+what cost, with org-controlled content capture and redaction. If you need to
+show an auditor how AI participates in your engineering process, that record
+is the product.
 
 ---
 
@@ -29,23 +63,38 @@ crewkit works with any project that Claude Code supports. Agent configurations c
 
 ### What are the system requirements?
 
-- **Node.js**: 18.0.0 or higher
-- **OS**: macOS, Linux, or Windows
-- **Claude Code**: Latest version installed
+- **OS**: macOS (Apple Silicon), Linux (x64), or Windows (x64)
+- **Claude Code**: installed and on your PATH
+- **Node.js 18+**: only if you install via npm — the CLI itself is a native
+  binary with no runtime dependency
 
 ### Can I use crewkit without Claude Code?
 
-No, crewkit requires Claude Code to function. It manages agents that run within Claude Code.
+No, crewkit requires Claude Code to function. It manages agents that run
+within Claude Code.
 
 ### How do I update crewkit?
 
+Curl-installed binaries auto-update in the background. To update manually:
+
 ```bash
-npm update -g @crewkit/cli
+crewkit update                # curl installs
+brew upgrade crewkit          # Homebrew
+npm update -g @crewkit/cli    # npm
+choco upgrade crewkit         # Chocolatey
 ```
 
 ### Can I use crewkit in CI/CD?
 
-Not currently. crewkit is designed for local development with interactive Claude Code sessions.
+Yes. Headless mode runs a full observed session from a script:
+
+```bash
+crewkit code -p "fix the failing tests" --output-format json
+```
+
+Set `CREWKIT_TOKEN` in your CI secret store for authentication. Headless
+runs get the same observability as interactive sessions. See the
+[Headless Mode](../README.md#headless-mode) section of the README.
 
 ---
 
@@ -53,20 +102,20 @@ Not currently. crewkit is designed for local development with interactive Claude
 
 ### How does authentication work?
 
-crewkit uses OAuth 2.1 device flow. You authenticate via browser, and tokens are stored securely in your OS keychain (macOS Keychain, Linux Secret Service, Windows Credential Manager).
-
-### Where are my tokens stored?
-
-Tokens are stored in your OS keychain, never in plain text files.
+crewkit uses OAuth 2.1 device flow. You authenticate via browser, and tokens
+are stored encrypted at rest in a local vault under `~/.config/crewkit/` —
+no OS keychain required, and never in plain text.
 
 ### How long do tokens last?
 
-- Access tokens: 1 hour
-- Refresh tokens: Automatically renew access tokens
+- Access tokens: 4 hours
+- Refresh tokens: automatically renew access tokens and are rotated on
+  every use
 
 ### Can I use multiple accounts?
 
-Currently, crewkit supports one authenticated account at a time. To switch accounts, log out and log in again.
+Currently, crewkit supports one authenticated account at a time. To switch
+accounts, log out and log in again.
 
 ---
 
@@ -74,7 +123,8 @@ Currently, crewkit supports one authenticated account at a time. To switch accou
 
 ### What is `.agent/config.yml`?
 
-This file identifies your project to crewkit. It contains:
+This file pins your project to crewkit when git-remote detection is
+ambiguous. It contains only slugs — no secrets:
 ```yaml
 org: your-org
 project: your-project
@@ -82,20 +132,30 @@ project: your-project
 
 ### Should I commit `.agent/config.yml` to git?
 
-Yes! This file should be committed so all team members use the same configuration.
+Yes. It contains only your organization and project slugs, and committing it
+means all team members resolve to the same project.
 
 ### What is `.claude/agents/`?
 
-This directory contains synced agent configurations. It's managed by crewkit and should be `.gitignore`d.
+This directory contains the agent configurations crewkit syncs from your
+organization. crewkit manages these files and backs up anything it
+overwrites to `.claude/.backups/`.
 
 ### Should I commit `.claude/` to git?
 
-No. Add this to `.gitignore`:
+That's your team's choice — many teams commit their own `.claude/` content
+(rules, commands, CLAUDE.md). What you generally *shouldn't* commit are the
+crewkit-managed files, since they're synced from crewkit.io on every
+session. If your team commits `.claude/`, scope the ignores:
+
 ```
-.claude/
+.claude/agents/
+.claude/.backups/
+.crewkit/
 ```
 
-Agent configurations are fetched from crewkit.io, not committed to git.
+`.crewkit/` is crewkit's per-project state (debug logs, caches) and should
+always be ignored — workspace init adds it to `.gitignore` for you.
 
 ---
 
@@ -108,22 +168,27 @@ Base agents are predefined agent configurations like:
 - `frontend-expert`
 - `python-expert`
 
-They serve as starting points that can be customized at organization and project levels.
+They serve as starting points that can be customized at organization and
+project levels.
 
 ### What are organization overrides?
 
-Organization-level configs that apply to all projects in your organization (e.g., company coding standards, tools, style guides).
+Organization-level configs that apply to all projects in your organization
+(e.g., company coding standards, tools, style guides).
 
 ### What are project overrides?
 
-Project-specific configs that only apply to one project (e.g., project architecture, specific libraries used).
+Project-specific configs that only apply to one project (e.g., project
+architecture, specific libraries used).
 
 ### What are role modifiers?
 
-Role-based behavior changes:
-- **Junior/Entry**: Coaching mode (agents guide, don't code)
-- **Intermediate/Senior**: Collaborative mode
-- **Manager/Admin**: Autonomous mode
+Role-based behavior changes, applied automatically from your team role:
+
+- **Junior**: coaching mode — agents guide and explain, don't write code
+- **Intermediate**: collaborative mode — agents suggest and implement with
+  explanation
+- **Senior**: autonomous mode — agents execute with minimal hand-holding
 
 ### How do I modify an agent?
 
@@ -180,7 +245,8 @@ When you run `crewkit code`:
 
 ### What if I manually edit `.claude/agents/` files?
 
-crewkit detects changes and logs them to your session. However, manual edits are not synced back to crewkit.io. Use the web UI to make permanent changes.
+crewkit detects changes and logs them to your session. However, manual edits
+are not synced back to crewkit.io. Use the web UI to make permanent changes.
 
 ### Where are backups stored?
 
@@ -189,7 +255,7 @@ crewkit detects changes and logs them to your session. However, manual edits are
 ### How do I restore a backup?
 
 ```bash
-cp .claude/.backups/rails-expert/2025-10-11T14-30-22-123Z.md .claude/agents/rails-expert.md
+cp .claude/.backups/rails-expert/2026-08-17T14-30-22.md .claude/agents/rails-expert.md
 ```
 
 ---
@@ -210,12 +276,8 @@ See [Troubleshooting Guide](troubleshooting.md) for more.
 
 Ensure:
 1. Claude Code is installed
-2. It's in your PATH
+2. It's in your PATH (`which claude`)
 3. You have the latest version
-
-### Why am I getting keychain errors?
-
-See [Authentication Troubleshooting](authentication.md#troubleshooting).
 
 ---
 
@@ -223,7 +285,8 @@ See [Authentication Troubleshooting](authentication.md#troubleshooting).
 
 ### Should I use coaching mode for junior developers?
 
-Yes! Coaching mode prevents agents from writing code directly, instead guiding juniors through the process. This helps them learn.
+Yes. Coaching mode prevents agents from writing code directly, instead
+guiding juniors through the process. This helps them learn.
 
 ### How often should I create experiments?
 
@@ -234,7 +297,8 @@ When you notice patterns:
 
 ### Should I create agents for every tech stack?
 
-Start with broad agents (rails-expert, frontend-expert). Add specialized agents as needed.
+Start with broad agents (rails-expert, frontend-expert). Add specialized
+agents as needed.
 
 ### How do I share configs with my team?
 
@@ -246,39 +310,24 @@ Start with broad agents (rails-expert, frontend-expert). Add specialized agents 
 
 ## Security
 
-### Is it safe to store tokens in the keychain?
+### Is it safe to store tokens on my machine?
 
-Yes. OS keychains are designed for secure credential storage and require authentication to access.
+Tokens are stored encrypted at rest in a local vault under
+`~/.config/crewkit/` — never in plain text. See [SECURITY.md](../SECURITY.md)
+for the full data-handling picture.
 
 ### What if I lose my laptop?
 
-1. Log in to https://crewkit.io
-2. Go to Settings → Security
-3. Revoke access for lost devices
-
-### Can I use crewkit in untrusted environments?
-
-No. Only use crewkit on trusted machines where you control the environment.
+Access tokens expire within 4 hours on their own. Review recent account
+activity on your profile at https://crewkit.io, and contact
+security@crewkit.io to revoke credentials for the lost device.
 
 ### Does crewkit collect telemetry?
 
-We use Sentry for crash reports (opt-in). No usage telemetry is collected without consent.
-
----
-
-## Billing & Plans
-
-### What's included in the free tier?
-
-Check https://crewkit.io/pricing for current plans.
-
-### Can I change plans?
-
-Yes, via the web UI at https://crewkit.io/settings/billing.
-
-### What happens if I exceed limits?
-
-Depends on your plan. See https://crewkit.io/pricing.
+Session telemetry is the product — it goes to your organization's crewkit
+account and nowhere else (see "Does crewkit send my code to your servers?"
+above). Separately, the CLI reports crashes to Sentry by default; disable
+with `CREWKIT_NO_TELEMETRY=1` or `DO_NOT_TRACK=1`.
 
 ---
 
@@ -287,10 +336,10 @@ Depends on your plan. See https://crewkit.io/pricing.
 ### How do I report a bug?
 
 [Open an issue](https://github.com/karibew/crewkit-cli/issues/new?template=bug_report.yml) with:
-- CLI version
-- OS and Node version
+- CLI version (`crewkit --version`) and install method
+- OS
 - Steps to reproduce
-- Error messages
+- Error messages, and `.crewkit/debug-latest.log` if relevant
 
 ### How do I request a feature?
 
@@ -313,5 +362,5 @@ Depends on your plan. See https://crewkit.io/pricing.
 - [Installation Guide](installation.md)
 - [Authentication Guide](authentication.md)
 - [Troubleshooting Guide](troubleshooting.md)
-- [Command Reference](commands.md)
+- [Command Reference](../README.md#commands)
 - [Ask in Discussions](https://github.com/karibew/crewkit-cli/discussions)
