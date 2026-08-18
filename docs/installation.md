@@ -83,6 +83,63 @@ Updates come through Chocolatey: `choco upgrade crewkit`.
 
 ---
 
+## Shell completions
+
+crewkit can generate tab completions for bash, zsh, fish, PowerShell, and
+elvish via `crewkit completions <shell>`.
+
+**Homebrew installs set this up automatically** — no action needed (start a
+new shell after installing).
+
+For every other install method, wire it up once:
+
+### zsh
+
+```zsh
+mkdir -p ~/.zfunc
+crewkit completions zsh > ~/.zfunc/_crewkit
+```
+
+Then make sure `~/.zshrc` adds the directory to `fpath` **before** `compinit`
+runs:
+
+```zsh
+fpath+=~/.zfunc
+autoload -Uz compinit && compinit
+```
+
+Alternatively, `source <(crewkit completions zsh)` anywhere **after**
+`compinit` stays current automatically at the cost of a few milliseconds of
+shell startup.
+
+### bash
+
+```bash
+echo 'source <(crewkit completions bash)' >> ~/.bashrc
+```
+
+### fish
+
+```fish
+mkdir -p ~/.config/fish/completions
+crewkit completions fish > ~/.config/fish/completions/crewkit.fish
+```
+
+The zsh and fish setups write a static file: regenerate it after crewkit
+updates (which happen automatically in the background) to pick up new
+commands and flags. The bash and PowerShell setups regenerate on every
+shell start and never go stale.
+
+### PowerShell
+
+Add to your `$PROFILE`:
+
+```powershell
+crewkit completions powershell | Out-String | Invoke-Expression
+```
+
+---
+
 ## Update crewkit
 
 ### Auto-update (curl installs)

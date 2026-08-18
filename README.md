@@ -24,6 +24,9 @@ choco install crewkit
 curl -fsSL https://crewkit.io/install.sh | sh
 ```
 
+Homebrew installs shell completions automatically; for other install methods,
+see [shell completions](docs/installation.md#shell-completions).
+
 ## Why crewkit?
 
 - **Team memory** — Decisions, docs, meeting transcripts, and past sessions become searchable project context, injected automatically when a session starts.
