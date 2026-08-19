@@ -82,7 +82,9 @@ Curl-installed binaries auto-update in the background. To update manually:
 crewkit update                # curl installs
 brew upgrade crewkit          # Homebrew
 npm update -g @crewkit/cli    # npm
-choco upgrade crewkit         # Chocolatey
+choco upgrade crewkit         # Chocolatey (frozen at 0.4.1: native Windows
+                              #   builds are paused, so this reports "up to
+                              #   date" forever — use WSL instead)
 ```
 
 ### Can I use crewkit in CI/CD?

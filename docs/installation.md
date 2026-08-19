@@ -170,7 +170,7 @@ defers to the package manager (and tells you the right command):
 ```bash
 brew upgrade crewkit          # Homebrew
 npm update -g @crewkit/cli    # npm
-choco upgrade crewkit         # Chocolatey
+choco upgrade crewkit         # Chocolatey (frozen at 0.4.1 — see above)
 ```
 
 ---
