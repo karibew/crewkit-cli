@@ -16,13 +16,17 @@ crewkit is the institutional memory and governance layer for AI-assisted enginee
 brew install karibew/tap/crewkit
 ```
 
-Or via npm, Chocolatey (Windows), or curl:
+Or via npm or curl:
 
 ```bash
 npm install -g @crewkit/cli
-choco install crewkit
 curl -fsSL https://crewkit.io/install.sh | sh
 ```
+
+**On Windows, use WSL** and install the Linux build with either command above.
+Native Windows binaries are paused, so the Chocolatey package (`choco install
+crewkit`) is frozen at 0.4.1 and no longer follows releases. WSL is the better
+target anyway: background observation is Unix-only.
 
 Homebrew installs shell completions automatically; for other install methods,
 see [shell completions](docs/installation.md#shell-completions).
@@ -300,7 +304,8 @@ crewkit code -r abc123 --fork-session  # Fork into new session
 | macOS | Apple Silicon (arm64) | Supported |
 | macOS | Intel (x64) | Not yet available — [open an issue](https://github.com/karibew/crewkit-cli/issues) if you need it |
 | Linux | x64 | Supported |
-| Windows | x64 | Supported |
+| Windows (WSL) | x64 | Supported — use the Linux build |
+| Windows (native) | x64 | Paused at 0.4.1 |
 
 ## Configuration
 

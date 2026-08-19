@@ -3,7 +3,8 @@
 crewkit ships as a native binary — no runtime required. Node.js 18+ is only
 needed if you install through npm.
 
-Supported platforms: macOS (Apple Silicon), Linux (x64), Windows (x64).
+Supported platforms: macOS (Apple Silicon), Linux (x64), and Windows (x64) via
+WSL. Native Windows builds are paused — see below.
 
 ---
 
@@ -73,13 +74,18 @@ crewkit --version
 
 ---
 
-## Install via Chocolatey (Windows)
+## Windows — use WSL
 
-```powershell
-choco install crewkit
+Native Windows binaries are paused, so releases ship macOS arm64 and Linux x64
+only. Install inside WSL with any Linux method above:
+
+```bash
+wsl npm install -g @crewkit/cli
 ```
 
-Updates come through Chocolatey: `choco upgrade crewkit`.
+The Chocolatey package (`choco install crewkit`) is frozen at 0.4.1 and no
+longer follows releases. WSL is the better target regardless: background
+observation is Unix-only, so it works there and not on native Windows.
 
 ---
 

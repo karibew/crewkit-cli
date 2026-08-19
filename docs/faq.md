@@ -63,7 +63,8 @@ is the product.
 
 ### What are the system requirements?
 
-- **OS**: macOS (Apple Silicon), Linux (x64), or Windows (x64)
+- **OS**: macOS (Apple Silicon), Linux (x64), or Windows (x64) via WSL —
+  native Windows builds are paused
 - **Claude Code**: installed and on your PATH
 - **Node.js 18+**: only if you install via npm — the CLI itself is a native
   binary with no runtime dependency
