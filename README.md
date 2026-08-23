@@ -85,15 +85,8 @@ Modes are applied automatically based on your team role.
 ### A/B Testing for Prompts
 
 Test changes to your agent configurations with real usage data — create an
-experiment, compare the variants on live sessions, and promote the winner:
-
-```bash
-crewkit experiments create <resource>   # Create an experiment for a resource
-crewkit experiments list                # List experiments
-crewkit experiments show <slug>         # View an experiment's details
-crewkit experiments metrics <slug>      # Compare variant performance
-crewkit experiments deploy <slug>       # Promote the winning variant
-```
+experiment, compare the variants on live sessions, and promote the winner,
+all from the dashboard at https://crewkit.io.
 
 ### Session Tracking
 
@@ -111,7 +104,6 @@ Every coding session is tracked for analysis. See which agents perform best, ide
 | `crewkit init` | Set up crewkit for current project |
 | `crewkit resources list` | List available agents |
 | `crewkit resources show <name>` | View agent configuration |
-| `crewkit experiments show <slug>` | View experiment details |
 | `crewkit org info` | Show organization details |
 | `crewkit project list` | List projects |
 | `crewkit project info` | Show current project details |

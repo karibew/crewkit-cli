@@ -213,25 +213,18 @@ A/B testing for agent configurations. You can:
 
 ### How do I create an experiment?
 
-```bash
-crewkit experiments create rails-expert
-```
-
-This creates an experiment with a 3-word name like `swift-amber-falcon`.
+In the dashboard: open your project at https://crewkit.io and create an
+experiment from the agent you want to test. It gets a 3-word name like
+`swift-amber-falcon`.
 
 ### How do I view experiment results?
 
-```bash
-crewkit experiments metrics swift-amber-falcon
-```
+Open the experiment in the dashboard to compare the variants' performance.
 
 ### How do I deploy a winning experiment?
 
-```bash
-crewkit experiments deploy swift-amber-falcon
-```
-
-This promotes the experiment variant to production.
+Deploy the winner from the experiment's page in the dashboard. This promotes
+that variant to production.
 
 ---
 
