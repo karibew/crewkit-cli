@@ -96,8 +96,10 @@ Every coding session is tracked for analysis. See which agents perform best, ide
 
 | Command | Description |
 |---------|-------------|
-| `crewkit` | Show status overview (auth, org, project, agents) |
+| `crewkit` | Start a coding session with your team's agents (flagless with piped output: the setup overview) |
 | `crewkit code` | Start coding session with synced agents |
+| `crewkit tui` | The same session inside crewkit's terminal interface (live sidebar) |
+| `crewkit status` | Setup overview (auth, org, project, agents) |
 | `crewkit auth login` | Connect your account |
 | `crewkit auth logout` | Sign out |
 | `crewkit auth status` | Check authentication status |
@@ -114,7 +116,7 @@ Every coding session is tracked for analysis. See which agents perform best, ide
 | `crewkit sessions report` | Team/project digest: sessions, cost, top agents, trends |
 | `crewkit sessions import` | Import historical sessions from JSONL |
 | `crewkit blueprint <subcommand>` | AI-powered project planning (create, list, show, tasks, ...) |
-| `crewkit sidecar` | Observe a native `claude` session without the TUI (Unix; also `crewkit code --no-tui`) |
+| `crewkit sidecar` | Alias of `crewkit code` — the same session under a second name; `status` / `stop` manage this directory's background observers |
 | `crewkit members <subcommand>` | Manage organization members (list, invite, update, remove) |
 | `crewkit usage` | Show usage and cost summary |
 | `crewkit save-state` | Manage saved working states (`ls`, `show`, `rm`) |
