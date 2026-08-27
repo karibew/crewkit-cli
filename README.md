@@ -103,11 +103,12 @@ Every coding session is tracked for analysis. See which agents perform best, ide
 | `crewkit auth login` | Connect your account |
 | `crewkit auth logout` | Sign out |
 | `crewkit auth status` | Check authentication status |
-| `crewkit init` | Set up crewkit for current project |
+| `crewkit init` | Pin the detected org/project mapping locally; `--workspace` creates a workspace project |
 | `crewkit resources list` | List available agents |
 | `crewkit resources show <name>` | View agent configuration |
 | `crewkit org info` | Show organization details |
 | `crewkit project list` | List projects |
+| `crewkit project create <name> --org <slug-or-id>` | Register a project server-side without prompts |
 | `crewkit project info` | Show current project details |
 | `crewkit playbooks list` | View playbooks and conventions for your projects |
 | `crewkit sessions list` | List recent sessions (current project by default) |
@@ -306,11 +307,18 @@ crewkit code -r abc123 --fork-session  # Fork into new session
 crewkit auto-detects your project from git remotes and registers it on first `crewkit code`. For manual configuration:
 
 ```bash
-crewkit init               # Pin the org/project mapping locally
-crewkit init --workspace   # Create and register a multi-repo workspace project
+crewkit init                                      # Pin the org/project mapping locally
+crewkit project create "My Project" --org acme   # Register a repository project server-side
+crewkit init --workspace                          # Create and register a multi-repo workspace project
 ```
 
-`crewkit init` writes a local `.agent/config.yml` with your organization and project settings — useful when git detection is ambiguous. It does not register the project with the API; registration happens via `crewkit code` (or `crewkit init --workspace` for workspaces).
+For a single repository, `crewkit init` writes `.agent/config.yml` to pin the
+detected mapping locally. It does not register a server-side project, including
+when run with `--yes`. `crewkit project create` is the prompt-free registration
+path for CI and BYOC installs; pass an explicit organization slug or ID with
+`--org`. When run in a repository, it also sends the detected origin remote.
+Workspace initialization remains separate: `crewkit init --workspace` creates
+and registers a workspace project.
 
 ## Global Flags
 
