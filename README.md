@@ -333,7 +333,7 @@ and registers a workspace project.
 
 | Variable | Description |
 |----------|-------------|
-| `CREWKIT_API_URL` | API endpoint override (local development and testing) |
+| `CREWKIT_API_URL` | API endpoint override (local development and testing). Scheme, host, port and path only — userinfo (`https://user:pass@host`), query and fragment are stripped, and a value that is not a URL with a host is refused |
 | `CREWKIT_TOKEN` | Access token for CI/scripts (takes precedence over stored login) |
 | `CREWKIT_WEB_URL` | Web/dashboard URL override (local development and testing) |
 | `CREWKIT_REPOSITORY_ID` | Explicit repository ID for `crewkit code` (skips detection/linking) |
