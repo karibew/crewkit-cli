@@ -69,6 +69,9 @@ Tokens are stored encrypted at rest in a local vault:
 
 For CI and scripts, set the `CREWKIT_TOKEN` environment variable — it takes
 precedence over the stored login. Keep it in your CI provider's secret store.
+crewkit reads it from the environment only and never writes it to disk, the
+keychain or a config file, so each run must set it. On your own machine, sign
+in with `crewkit auth login` instead.
 
 ---
 
